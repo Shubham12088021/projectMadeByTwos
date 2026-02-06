@@ -1,0 +1,102 @@
+/* =========================
+   TABS
+========================= */
+.arrivals-tabs span {
+  cursor: pointer;
+  font-size: 15px;
+  color: #777;
+  padding-bottom: 6px;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.arrivals-tabs span:hover {
+  color: #111;
+}
+
+.arrivals-tabs span.active {
+  color: #111;
+  font-weight: 500;
+}
+
+.arrivals-tabs span.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: #111;
+}
+
+/* =========================
+   PRODUCT CARD
+========================= */
+.product-card {
+  text-align: center;
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.product-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.product-card h6 {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.product-card .price {
+  font-weight: 600;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+/* =========================
+   BADGE
+========================= */
+.badge-new {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 10px;
+  background: #fff;
+  border: 1px solid #d00;
+  color: #d00;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+
+
+/* rating */
+.rating {
+  color: #f5a623;
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+.review-count {
+  color: #666;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.product-name {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}

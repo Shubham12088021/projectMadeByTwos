@@ -1,0 +1,278 @@
+/* ===============================
+   PAGE WRAPPER
+================================ */
+.product-detail {
+  margin: 80px auto;
+}
+
+/* ===============================
+   IMAGE WRAPPER (MAIN IMAGE)
+================================ */
+.image-wrapper {
+  width: 100%;
+  height: 480px;
+  background: #fafafa;
+  border-radius: 22px;
+  border: 1px solid #e6e6e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.1);
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* ===============================
+   THUMBNAILS (NO BORDER DEFAULT)
+================================ */
+.thumbnail-row {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.thumb-box {
+  width: 78px;
+  height: 78px;
+  background: #f6f6f6;
+  border-radius: 14px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Hover (subtle) */
+.thumb-box:hover {
+  transform: translateY(-3px);
+}
+
+/* ✅ ONLY SELECTED THUMB HIGHLIGHT */
+.thumb-box.active {
+  background: #fff;
+  transform: scale(1.08);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ===============================
+   PRODUCT INFO
+================================ */
+.product-info-box {
+  padding-left: 40px;
+}
+
+.product-title {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* ===============================
+   RATING
+================================ */
+.rating {
+  color: #f5a623;
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+.rating span {
+  color: #666;
+  font-size: 13px;
+}
+
+/* ===============================
+   PRICE
+================================ */
+.price-section {
+  margin-bottom: 20px;
+}
+
+.price {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.tax {
+  display: block;
+  font-size: 12px;
+  color: #777;
+  margin-top: 4px;
+}
+
+/* ===============================
+   DESCRIPTION
+================================ */
+.description {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+/* ===============================
+   SIZE & QUANTITY
+================================ */
+.size-section,
+.qty-section {
+  margin-bottom: 26px;
+}
+
+.size-section h6,
+.qty-section h6 {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.sizes button {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 10px 18px;
+  margin-right: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.sizes button:hover {
+  border-color: #111;
+}
+
+.sizes button.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+/* ===============================
+   QUANTITY
+================================ */
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.qty-control button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.qty-control button:hover {
+  background: #f3f3f3;
+}
+
+.qty-control span {
+  min-width: 34px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ===============================
+   ADD TO CART (PREMIUM)
+================================ */
+.add-to-cart-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #111, #333);
+  color: #fff;
+  padding: 18px;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  margin-top: 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s ease;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
+}
+
+.add-to-cart-btn:hover {
+  background: linear-gradient(135deg, #000, #222);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
+}
+
+.add-to-cart-btn:active {
+  transform: scale(0.97);
+}
+
+/* Shine effect */
+.add-to-cart-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: skewX(-20deg);
+}
+
+.add-to-cart-btn:hover::after {
+  animation: shine 0.8s ease;
+}
+
+@keyframes shine {
+  100% {
+    left: 125%;
+  }
+}
+
+
+/* ===============================
+   IMAGE ZOOM ON HOVER
+================================ */
+.image-wrapper {
+  width: 100%;
+  height: 480px;
+  background: #fafafa;
+  border-radius: 22px;
+  border: 1px solid #e6e6e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow: hidden;              /* 🔑 IMPORTANT */
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.1);
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.5s ease; /* smooth zoom */
+}
+
+/* 🔍 ZOOM EFFECT */
+.image-wrapper:hover img {
+  transform: scale(1.15);
+}

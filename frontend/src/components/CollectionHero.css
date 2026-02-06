@@ -1,0 +1,26 @@
+.collection-hero {
+  height: 65vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.collection-hero-content {
+  color: #fff;
+  max-width: 700px;
+  padding: 0 20px;
+}
+
+.collection-hero-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.collection-hero-content p {
+  font-size: 1.1rem;
+  opacity: 0.95;
+}

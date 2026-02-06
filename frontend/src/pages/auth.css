@@ -1,0 +1,120 @@
+/* ===============================
+   PAGE
+================================ */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f6f6f6; /* clean neutral */
+}
+
+/* ===============================
+   CARD
+================================ */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 48px 40px;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ===============================
+   BRAND
+================================ */
+.brand {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  color: #111;
+}
+
+/* ===============================
+   HEADINGS
+================================ */
+.title {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #111;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+/* ===============================
+   FIELDS
+================================ */
+.field {
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+.field input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+/* ===============================
+   BUTTON (PREMIUM)
+================================ */
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #111;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.login-btn:hover {
+  background: #000;
+  transform: translateY(-1px);
+}
+
+/* ===============================
+   SWITCH
+================================ */
+.switch-auth {
+  margin-top: 22px;
+  font-size: 14px;
+  color: #555;
+}
+
+.switch-auth a {
+  color: #111;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.switch-auth a:hover {
+  text-decoration: underline;
+}

@@ -12,7 +12,7 @@ import ProductDetail from "./components/ProductDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Footer from "./components/Footer";
-
+import Cart from "./pages/Cart";
 
 
 function App() {
@@ -38,6 +38,7 @@ function App() {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/cart" element={<Cart/>}/>
       </Routes>
 
       <Footer />

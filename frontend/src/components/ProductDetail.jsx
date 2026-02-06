@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import "./productDetail.css";
 
 function ProductDetail() {
@@ -8,58 +9,55 @@ function ProductDetail() {
   const [selectedImg, setSelectedImg] = useState("");
   const [size, setSize] = useState(8);
   const [qty, setQty] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        setProduct(data);
-        setSelectedImg(data.image);
-      });
+    axios
+      .get(`http://localhost:5000/api/products/${id}`)
+      .then((res) => {
+        setProduct(res.data);
+        setSelectedImg(res.data.image);
+      })
+      .catch((err) => console.log(err));
   }, [id]);
 
   const addToCartHandler = async () => {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  if (!token) {
-    alert("Please login first");
-    return;
-  }
-
-  try {
-    const res = await fetch("http://localhost:5000/api/cart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        productId: product._id,
-        qty: qty,
-        size: size,
-      }),
-    });
-
-    if (res.ok) {
-      alert("Product added to cart 🛒");
-    } else {
-      const data = await res.json();
-      alert(data.message || "Failed to add product");
+    if (!token) {
+      alert("Please login first");
+      return;
     }
-  } catch (error) {
-    console.error(error);
-    alert("Something went wrong");
-  }
-};
 
+    try {
+      setLoading(true);
+
+      await axios.post(
+        "http://localhost:5000/api/cart/add", // ✅ CORRECT ROUTE
+        {
+          productId: product._id,
+          qty: qty,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Product added to cart 🛒");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!product) {
     return <h4 className="text-center my-5">Loading...</h4>;
   }
 
-
-
-  // temporary gallery (future me backend se aayega)
   const galleryImages = [
     product.image,
     product.image,
@@ -70,7 +68,7 @@ function ProductDetail() {
   return (
     <div className="container product-detail">
       <div className="row align-items-start">
-        {/* LEFT : IMAGE + THUMBNAILS */}
+        {/* LEFT */}
         <div className="col-md-6">
           <div className="image-wrapper">
             <img src={selectedImg} alt={product.name} />
@@ -91,32 +89,29 @@ function ProductDetail() {
           </div>
         </div>
 
-        {/* RIGHT : PRODUCT INFO */}
+        {/* RIGHT */}
         <div className="col-md-6 product-info-box">
           <h2 className="product-title">{product.name}</h2>
 
-          {/* Rating */}
           <div className="rating">
             ★★★★☆ <span>({product.numReviews} ratings)</span>
           </div>
 
-          {/* Price */}
           <div className="price-section">
             <span className="price">₹{product.price}</span>
             <span className="tax">Inclusive of all taxes</span>
           </div>
 
-          {/* Description */}
           <p className="description">
             {product.description ||
-              "Premium sneakers crafted with breathable material, cushioned sole and superior grip. Perfect for daily wear, travel and casual outings."}
+              "Premium sneakers crafted with breathable material, cushioned sole and superior grip."}
           </p>
 
           {/* Size */}
           <div className="size-section">
             <h6>Select Shoe Size</h6>
             <div className="sizes">
-              {[6, 7, 8, 9, 10].map(s => (
+              {[6, 7, 8, 9, 10].map((s) => (
                 <button
                   key={s}
                   className={size === s ? "active" : ""}
@@ -132,20 +127,22 @@ function ProductDetail() {
           <div className="qty-section">
             <h6>Quantity</h6>
             <div className="qty-control">
-              <button onClick={() => setQty(qty > 1 ? qty - 1 : 1)}>-</button>
+              <button onClick={() => setQty(qty > 1 ? qty - 1 : 1)}>
+                -
+              </button>
               <span>{qty}</span>
               <button onClick={() => setQty(qty + 1)}>+</button>
             </div>
           </div>
 
-          {/* Add to cart */}
+          {/* Add to Cart */}
           <button
-  className="add-to-cart-btn"
-  onClick={addToCartHandler}
->
-  ADD TO CART
-</button>
-
+            className="add-to-cart-btn"
+            onClick={addToCartHandler}
+            disabled={loading}
+          >
+            {loading ? "Adding..." : "ADD TO CART"}
+          </button>
         </div>
       </div>
     </div>

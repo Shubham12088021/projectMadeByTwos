@@ -1,15 +1,11 @@
 .category-title {
   text-align: center;
   font-family: "Montserrat", sans-serif;
-
   font-size: 36px;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
-
-  /* Elegant solid color (no uneven gradient issue) */
-  color: #9c7a4d;   /* champagne / gold tone */
-
+  color: #9c7a4d;
   margin-bottom: 60px;
 }
 
@@ -17,12 +13,13 @@
 .category-card {
   height: 360px;
   border-radius: 26px;
+  background-image: var(--bg-image);
   background-size: cover;
   background-position: center;
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.45s ease;
+  transition: transform 0.45s ease, box-shadow 0.45s ease;
 }
 
 .category-card::after {
@@ -66,7 +63,7 @@
   margin-bottom: 20px;
 }
 
-/* Premium Button */
+/* Button */
 .category-btn {
   width: fit-content;
   padding: 10px 34px;
@@ -76,11 +73,20 @@
   color: #111;
   font-weight: 600;
   letter-spacing: 0.5px;
-  transition: all 0.35s ease;
+  cursor: pointer;
+  transition: transform 0.35s ease, background 0.35s ease;
 }
 
 .category-btn:hover {
   background: linear-gradient(135deg, #111, #2d2d2d);
   color: #fff;
   transform: translateX(6px);
+}
+
+/* Accessibility / motion */
+@media (prefers-reduced-motion: reduce) {
+  .category-card,
+  .category-btn {
+    transition: none;
+  }
 }

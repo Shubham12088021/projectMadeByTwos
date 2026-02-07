@@ -1,7 +1,10 @@
 import HeroVideo from "../assets/herosectionvideo.mp4";
 import "./HeroSection.css";
+import { useNavigate } from "react-router-dom";
 
 function HeroSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="hero">
       {/* Background Video */}
@@ -12,7 +15,7 @@ function HeroSection() {
       {/* Soft Overlay */}
       <div className="hero-overlay"></div>
 
-      {/* LEFT & LOWER CONTENT */}
+      {/* Content */}
       <div className="hero-content">
         <h1 className="hero-title">Discover Your Style</h1>
 
@@ -21,8 +24,19 @@ function HeroSection() {
         </p>
 
         <div className="hero-buttons">
-          <button className="btn-premium">Shop for Men</button>
-          <button className="btn-premium">Shop for Women</button>
+          <button
+            className="btn-premium"
+            onClick={() => navigate("/men")}
+          >
+            Shop for Men
+          </button>
+
+          <button
+            className="btn-premium"
+            onClick={() => navigate("/women")}
+          >
+            Shop for Women
+          </button>
         </div>
       </div>
     </section>

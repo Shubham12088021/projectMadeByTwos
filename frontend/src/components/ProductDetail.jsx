@@ -2,30 +2,56 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./productDetail.css";
+import { toast } from "react-toastify";
 
 function ProductDetail() {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
+
+  const [product, setProduct] = useState(null); // null = loading, false = error
   const [selectedImg, setSelectedImg] = useState("");
   const [size, setSize] = useState(8);
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(false);
 
+
+  const buyNowHandler = () => {
+    toast.info("Buy Now coming soon 🚀", {
+      position: "bottom-right",
+      autoClose: 1500,
+    });
+  };
+
+
+  /* ======================
+     FETCH PRODUCT
+  ====================== */
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/products/${id}`)
-      .then((res) => {
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/products/${id}`
+        );
+
         setProduct(res.data);
         setSelectedImg(res.data.image);
-      })
-      .catch((err) => console.log(err));
+      } catch (error) {
+        console.error("Product fetch error:", error);
+        toast.error("Failed to load product");
+        setProduct(false); // 🔴 stop infinite loading
+      }
+    };
+
+    fetchProduct();
   }, [id]);
 
+  /* ======================
+     ADD TO CART
+  ====================== */
   const addToCartHandler = async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("Please login first");
+      toast.warning("Please login to add items to cart");
       return;
     }
 
@@ -33,63 +59,67 @@ function ProductDetail() {
       setLoading(true);
 
       await axios.post(
-        "http://localhost:5000/api/cart/add", // ✅ CORRECT ROUTE
+        "http://localhost:5000/api/cart/add",
         {
           productId: product._id,
-          qty: qty,
+          qty,
+          size,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      alert("Product added to cart 🛒");
+      toast.success(`${product.name} added to cart 🛒`, {
+        position: "bottom-right",
+        autoClose: 1500,
+        theme: "colored",
+      });
     } catch (error) {
-      console.error(error);
-      alert("Something went wrong");
+      console.error("Add to cart error:", error);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!product) {
-    return <h4 className="text-center my-5">Loading...</h4>;
+  /* ======================
+     UI STATES
+  ====================== */
+  if (product === false) {
+    return (
+      <h4 className="text-center my-5">
+        Product not found ❌
+      </h4>
+    );
   }
 
-  const galleryImages = [
-    product.image,
-    product.image,
-    product.image,
-    product.image,
-  ];
+  if (product === null) {
+    return (
+      <h4 className="text-center my-5">
+        Loading...
+      </h4>
+    );
+  }
+
+  /* ======================
+     PRICE LOGIC
+  ====================== */
+  const discountPercent = 20;
+  const oldPrice = product.price;
+  const newPrice = Math.round(oldPrice * (1 - discountPercent / 100));
 
   return (
     <div className="container product-detail">
       <div className="row align-items-start">
-        {/* LEFT */}
-        <div className="col-md-6">
+        {/* LEFT IMAGE */}
+        <div className="col-md-6 text-center">
           <div className="image-wrapper">
             <img src={selectedImg} alt={product.name} />
           </div>
-
-          <div className="thumbnail-row">
-            {galleryImages.map((img, index) => (
-              <div
-                key={index}
-                className={`thumb-box ${
-                  selectedImg === img ? "active" : ""
-                }`}
-                onClick={() => setSelectedImg(img)}
-              >
-                <img src={img} alt="thumb" />
-              </div>
-            ))}
-          </div>
         </div>
 
-        {/* RIGHT */}
+        {/* RIGHT INFO */}
         <div className="col-md-6 product-info-box">
           <h2 className="product-title">{product.name}</h2>
 
@@ -97,19 +127,29 @@ function ProductDetail() {
             ★★★★☆ <span>({product.numReviews} ratings)</span>
           </div>
 
+          {/* PRICE */}
           <div className="price-section">
-            <span className="price">₹{product.price}</span>
+            <div className="price-row">
+              <span className="old-price">₹{oldPrice}</span>
+              <span className="price">₹{newPrice}</span>
+            </div>
+
+            <div className="discount-box">
+              {discountPercent}% OFF
+            </div>
+
             <span className="tax">Inclusive of all taxes</span>
           </div>
 
+          {/* DESCRIPTION */}
           <p className="description">
             {product.description ||
               "Premium sneakers crafted with breathable material, cushioned sole and superior grip."}
           </p>
 
-          {/* Size */}
+          {/* SIZE */}
           <div className="size-section">
-            <h6>Select Shoe Size</h6>
+            <h6>Shoe Size</h6>
             <div className="sizes">
               {[6, 7, 8, 9, 10].map((s) => (
                 <button
@@ -123,7 +163,7 @@ function ProductDetail() {
             </div>
           </div>
 
-          {/* Quantity */}
+          {/* QUANTITY */}
           <div className="qty-section">
             <h6>Quantity</h6>
             <div className="qty-control">
@@ -131,18 +171,32 @@ function ProductDetail() {
                 -
               </button>
               <span>{qty}</span>
-              <button onClick={() => setQty(qty + 1)}>+</button>
+              <button onClick={() => setQty(qty + 1)}>
+                +
+              </button>
             </div>
           </div>
 
-          {/* Add to Cart */}
-          <button
-            className="add-to-cart-btn"
-            onClick={addToCartHandler}
-            disabled={loading}
-          >
-            {loading ? "Adding..." : "ADD TO CART"}
-          </button>
+          {/* BUTTONS */}
+
+          <div className="action-buttons">
+            <button
+              className="add-to-cart-btn"
+              onClick={addToCartHandler}
+              disabled={loading}
+            >
+              {loading ? "Adding..." : "ADD TO CART"}
+            </button>
+
+            <button
+              className="buy-now-btn"
+              onClick={buyNowHandler}
+            >
+              BUY NOW
+            </button>
+
+          </div>
+
         </div>
       </div>
     </div>

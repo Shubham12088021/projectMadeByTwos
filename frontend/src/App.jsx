@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
+/* COMPONENTS */
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import Categories from "./components/Categories";
@@ -14,6 +15,10 @@ import Footer from "./components/Footer";
 import Cart from "./pages/Cart";
 import BrandStory from "./components/BrandStory";
 import SpottedSection from "./components/SpottedSection";
+
+/* 🔔 TOASTIFY */
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -39,10 +44,21 @@ function App() {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/cart" element={<Cart/>}/>
+        <Route path="/cart" element={<Cart />} />
       </Routes>
 
       <Footer />
+
+      {/* 🔔 Toast Container (ADD ONLY ONCE) */}
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="dark"
+      />
     </>
   );
 }

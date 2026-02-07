@@ -1,43 +1,24 @@
 import "./ProductCard.css";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 const ProductCard = ({ product }) => {
+  if (!product) return null; // safety
 
-  const addToCartHandler = async () => {
-    try {
-      const token = localStorage.getItem("token"); // JWT saved at login
-
-      await axios.post(
-        "http://localhost:5000/api/cart/add",
-        {
-          productId: product._id,
-          qty: 1
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      alert("Added to cart ✅");
-    } catch (error) {
-      console.log(error);
-      alert("Please login to add items to cart");
-    }
-  };
+  const discountPercent = 20;
+  const oldPrice = product.price;
+  const newPrice = Math.round(oldPrice * (1 - discountPercent / 100));
 
   return (
     <div className="product-card">
-
-      {/* Clickable product info */}
       <Link to={`/product/${product._id}`} className="product-link">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="product-img"
-        />
+        <div className="img-wrapper">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="product-img"
+            loading="lazy"
+          />
+        </div>
 
         <div className="product-info">
           <h5 className="product-name">{product.name}</h5>
@@ -46,15 +27,18 @@ const ProductCard = ({ product }) => {
             ★★★★☆ <span className="rating-text">4.0</span>
           </div>
 
-          <p className="price">₹{product.price}</p>
+          <div className="price-box">
+            <div className="price-row">
+              <span className="old-price">₹{oldPrice}</span>
+              <span className="new-price">₹{newPrice}</span>
+            </div>
+
+            <div className="discount-box">
+              {discountPercent}% OFF
+            </div>
+          </div>
         </div>
       </Link>
-
-      {/* Add to Cart Button */}
-      <button className="add-to-cart-btn" onClick={addToCartHandler}>
-        Add to Cart
-      </button>
-
     </div>
   );
 };

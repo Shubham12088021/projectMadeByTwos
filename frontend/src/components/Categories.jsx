@@ -10,11 +10,13 @@ function Categories() {
         Shop by Category
       </h2>
 
-      <div className="row g-4">
+      {/* Centered row */}
+      <div className="row g-5 justify-content-center">
         {/* Men */}
-        <div className="col-md-4">
+        <div className="col-md-5 col-lg-4">
           <div
-            className="category-card"
+            className="category-card men"
+            onClick={() => navigate("/men")}
             style={{
               backgroundImage:
                 "url('https://m.media-amazon.com/images/I/717kxMoZiAL._UL1500_.jpg')",
@@ -23,20 +25,16 @@ function Categories() {
             <div className="category-overlay">
               <h4>Shop for Men</h4>
               <p>Explore latest trends & essentials</p>
-              <button
-                className="category-btn"
-                onClick={() => navigate("/men")}
-              >
-                Explore
-              </button>
+              <button className="category-btn">Explore</button>
             </div>
           </div>
         </div>
 
         {/* Women */}
-        <div className="col-md-4">
+        <div className="col-md-5 col-lg-4">
           <div
-            className="category-card"
+            className="category-card women"
+            onClick={() => navigate("/women")}
             style={{
               backgroundImage:
                 "url('https://tse2.mm.bing.net/th/id/OIP.San7tyGGuzeWuCnwbIRruwHaLG?rs=1&pid=ImgDetMain&o=7&rm=3')",
@@ -45,34 +43,7 @@ function Categories() {
             <div className="category-overlay">
               <h4>Shop for Women</h4>
               <p>Discover stylish outfits & ethnic wear</p>
-              <button
-                className="category-btn"
-                onClick={() => navigate("/women")}
-              >
-                Explore
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Kids */}
-        <div className="col-md-4">
-          <div
-            className="category-card"
-            style={{
-              backgroundImage:
-                "url('https://tse1.mm.bing.net/th/id/OIP.1I89c8bHfz9Egjw4xfirPgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3')",
-            }}
-          >
-            <div className="category-overlay">
-              <h4>Shop for Kids</h4>
-              <p>Cute, comfy & playful styles</p>
-              <button
-                className="category-btn"
-                onClick={() => navigate("/kids")}
-              >
-                Explore
-              </button>
+              <button className="category-btn">Explore</button>
             </div>
           </div>
         </div>

@@ -37,17 +37,11 @@ function NewArrivals() {
         >
           Women's Collection
         </span>
-        <span
-          className={activeTab === "kids" ? "active" : ""}
-          onClick={() => setActiveTab("kids")}
-        >
-          Kids Collection
-        </span>
       </div>
 
       {/* PRODUCTS (ONLY FIRST 3 FROM THAT PAGE DATA) */}
       <div className="row g-4">
-        {products.slice(0, 3).map(item => (
+        {products.slice(0, 5).map(item => (
           <div className="col-md-4" key={item._id}>
             <div className="product-card">
               <span className="badge-new">NEW ARRIVAL</span>

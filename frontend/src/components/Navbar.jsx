@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
+import "./navbar.css";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -11,79 +12,54 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar bg-body-tertiary shadow-sm">
+    <nav className="navbar bg-body-tertiary shadow-sm premium-navbar">
       <div className="container">
         <div className="row w-100 align-items-center">
 
-          {/* Left */}
+          {/* LEFT */}
           <div className="col-8 d-flex align-items-center">
             <Link
-              className="navbar-brand me-4 fw-bold fs-4 text-decoration-none text-dark"
+              className="navbar-brand fw-bold fs-4 text-decoration-none text-dark brand-logo"
               to="/"
             >
               MyStore
             </Link>
 
-            <ul className="navbar-nav flex-row gap-3">
+            <ul className="navbar-nav flex-row gap-4 ms-3">
               <li className="nav-item">
-                <Link className="nav-link" to="/">Home</Link>
+                <Link className="nav-link premium-link" to="/">Home</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/men">Men</Link>
+                <Link className="nav-link premium-link" to="/men">
+                  Men’s Collection
+                </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/women">Women</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/kids">Kids</Link>
+                <Link className="nav-link premium-link" to="/women">
+                  Women’s Collection
+                </Link>
               </li>
             </ul>
           </div>
 
-          {/* Right */}
+          {/* RIGHT */}
           <div className="col-4 d-flex justify-content-end align-items-center gap-3">
-
-            {/* Search */}
-            {/* <form className="d-flex">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-              />
-              <button className="btn btn-outline-success">
-                Search
-              </button>
-            </form> */}
-
-            {/* AUTH SECTION */}
             {!token ? (
-              <>
-                {/* LOGIN BUTTON */}
-                <Link
-                  to="/login"
-                  className="btn btn-dark d-flex align-items-center gap-2 px-3"
-                  style={{ borderRadius: "30px" }}
-                >
-                  <FaUserCircle size={18} />
-                  Login
-                </Link>
-
-                {/* REGISTER */}
-                {/* <Link
-                  to="/register"
-                  className="btn btn-outline-dark px-3"
-                  style={{ borderRadius: "30px" }}
-                >
-                  Register
-                </Link> */}
-              </>
+              /* ✅ LOGIN — SAME AS BEFORE */
+              <Link
+                to="/login"
+                className="btn btn-dark d-flex align-items-center gap-2 px-3"
+                style={{ borderRadius: "30px" }}
+              >
+                <FaUserCircle size={18} />
+                Login
+              </Link>
             ) : (
               <>
-                {/* CART ICON */}
+                {/* CART */}
                 <Link
                   to="/cart"
-                  className="btn btn-outline-dark d-flex align-items-center gap-2 px-3 position-relative"
-                  style={{ borderRadius: "30px" }}
+                  className="cart-btn"
                 >
                   <FaShoppingCart size={18} />
                   Cart
@@ -91,15 +67,13 @@ function Navbar() {
 
                 {/* LOGOUT */}
                 <button
-                  className="btn btn-danger px-3"
-                  style={{ borderRadius: "30px" }}
+                  className="logout-btn"
                   onClick={logoutHandler}
                 >
                   Logout
                 </button>
               </>
             )}
-
           </div>
 
         </div>

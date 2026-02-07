@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import CollectionHero from "./CollectionHero";
 import ProductCard from "./ProductCard";
+import BrandStory from "./BrandStory";   // ✅ ADD THIS
 
 function Womens() {
   const [products, setProducts] = useState([]);
@@ -17,6 +18,7 @@ function Womens() {
 
   return (
     <>
+      {/* HERO */}
       <CollectionHero
         title="Women's Collection"
         description="Elegant styles, new trends and timeless fashion curated for every woman."
@@ -24,6 +26,7 @@ function Womens() {
         overlay={0.45}
       />
 
+      {/* PRODUCTS */}
       <div className="container my-5">
         {loading ? (
           <h5 className="text-center">Loading products...</h5>
@@ -31,13 +34,15 @@ function Womens() {
           <div className="row g-4">
             {products.map(item => (
               <div className="col-md-3" key={item._id}>
-                {/* ✅ SAME AS MEN */}
                 <ProductCard product={item} />
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* ✅ BRAND STORY (WOMEN CONTENT WILL SHOW HERE) */}
+      <BrandStory />
     </>
   );
 }

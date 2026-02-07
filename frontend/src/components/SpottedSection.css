@@ -1,0 +1,127 @@
+/* ===============================
+   SECTION
+================================ */
+.spotted-section {
+  padding: 90px 0;
+  background: #fff;
+}
+
+/* ===============================
+   TITLE
+================================ */
+.spotted-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* ===============================
+   SLIDER WRAPPER
+================================ */
+.spotted-slider-wrapper {
+  padding: 0 6%;
+}
+
+/* react-slick spacing fix */
+.spotted-slide {
+  padding: 0 14px;
+}
+
+/* ===============================
+   CARD
+================================ */
+.spotted-card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.35s ease;
+}
+
+.spotted-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.16);
+}
+
+/* ===============================
+   IMAGE
+================================ */
+.spotted-card img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+}
+
+/* ===============================
+   INFO
+================================ */
+.spotted-info {
+  padding: 18px 20px 22px;
+}
+
+.spotted-info p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.spotted-info span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+}
+
+/* ===============================
+   SLICK ARROWS
+================================ */
+.slick-prev,
+.slick-next {
+  width: 40px;
+  height: 40px;
+  z-index: 5;
+}
+
+.slick-prev {
+  left: -52px;
+}
+
+.slick-next {
+  right: -52px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-size: 36px;
+  color: #111;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 1024px) {
+  .slick-prev {
+    left: -30px;
+  }
+
+  .slick-next {
+    right: -30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .spotted-slider-wrapper {
+    padding: 0 18px;
+  }
+
+  .spotted-card img {
+    height: 360px;
+  }
+
+  .slick-prev,
+  .slick-next {
+    display: none !important;
+  }
+}

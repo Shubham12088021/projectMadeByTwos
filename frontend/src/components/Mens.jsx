@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CollectionHero from "./CollectionHero";
 import ProductCard from "./ProductCard";
+import BrandStory from "./BrandStory";   // ✅ ADD THIS
 
 function Mens() {
   const [products, setProducts] = useState([]);
@@ -18,6 +18,7 @@ function Mens() {
 
   return (
     <>
+      {/* HERO */}
       <CollectionHero
         title="Men's Collection"
         description="Discover premium styles for modern men."
@@ -25,6 +26,7 @@ function Mens() {
         overlay={0.55}
       />
 
+      {/* PRODUCTS */}
       <div className="container my-5">
         {loading ? (
           <h5 className="text-center">Loading products...</h5>
@@ -38,6 +40,9 @@ function Mens() {
           </div>
         )}
       </div>
+
+      {/* ✅ BRAND STORY (MEN CONTENT WILL SHOW HERE) */}
+      <BrandStory />
     </>
   );
 }

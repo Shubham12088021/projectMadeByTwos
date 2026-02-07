@@ -1,1 +1,137 @@
 @import "tailwindcss";
+
+
+/* Toast position under navbar */
+.Toastify__toast-container--top-right {
+  top: 80px;
+  right: 20px;
+}
+
+/* Remove default toast padding */
+.cart-toast-wrapper {
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* =========================
+   MAIN CARD
+========================= */
+.cart-toast {
+  width: 340px;
+  background: #ffffff;                /* ✅ white background */
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+  font-family: inherit;
+  color: #111;                        /* ✅ dark readable text */
+}
+
+/* =========================
+   HEADER
+========================= */
+.cart-toast-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #2e7d32;                     /* green success */
+}
+
+.cart-toast-header button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #555;
+}
+
+/* =========================
+   BODY
+========================= */
+.cart-toast-body {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.cart-toast-body img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+.cart-toast-body h6 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+.cart-toast-body p {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+.cart-toast-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* VIEW CART */
+.cart-toast-actions .outline {
+  flex: 1;
+  height: 40px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  border: 1.5px solid #3f51b5;
+  color: #3f51b5;
+  transition: all 0.25s ease;
+}
+
+.cart-toast-actions .outline:hover {
+  background: #eef0ff;
+}
+
+/* CHECK OUT */
+.cart-toast-actions .primary {
+  flex: 1;
+  height: 40px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+  border: none;
+  color: #fff;
+  transition: all 0.25s ease;
+}
+
+.cart-toast-actions .primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(63, 81, 181, 0.35);
+}
+
+/* =========================
+   CONTINUE SHOPPING
+========================= */
+.cart-toast .continue {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3f51b5;
+  cursor: pointer;
+}
+
+.cart-toast .continue:hover {
+  text-decoration: underline;
+}

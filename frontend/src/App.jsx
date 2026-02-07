@@ -17,7 +17,7 @@ import BrandStory from "./components/BrandStory";
 import SpottedSection from "./components/SpottedSection";
 
 /* 🔔 TOASTIFY */
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
@@ -57,8 +57,12 @@ function App() {
         newestOnTop
         closeOnClick
         pauseOnHover
+        draggable={false}
         theme="dark"
+        transition={Slide}          // ✅ upar se slide
+        // style={{ marginTop: "80px" }} // ✅ navbar ke niche
       />
+
     </>
   );
 }

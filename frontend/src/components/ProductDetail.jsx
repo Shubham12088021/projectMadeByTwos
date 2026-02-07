@@ -3,53 +3,45 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./productDetail.css";
 import { toast } from "react-toastify";
+import CartToast from "./CartToast";
 
 function ProductDetail() {
   const { id } = useParams();
 
-  const [product, setProduct] = useState(null); // null = loading, false = error
+  const [product, setProduct] = useState(null);
   const [selectedImg, setSelectedImg] = useState("");
   const [size, setSize] = useState(8);
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(false);
 
-
+  /* BUY NOW */
   const buyNowHandler = () => {
     toast.info("Buy Now coming soon 🚀", {
-      position: "bottom-right",
       autoClose: 1500,
     });
   };
 
-
-  /* ======================
-     FETCH PRODUCT
-  ====================== */
+  /* FETCH PRODUCT */
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const res = await axios.get(
           `http://localhost:5000/api/products/${id}`
         );
-
         setProduct(res.data);
         setSelectedImg(res.data.image);
       } catch (error) {
-        console.error("Product fetch error:", error);
         toast.error("Failed to load product");
-        setProduct(false); // 🔴 stop infinite loading
+        setProduct(false);
       }
     };
 
     fetchProduct();
   }, [id]);
 
-  /* ======================
-     ADD TO CART
-  ====================== */
+  /* ADD TO CART */
   const addToCartHandler = async () => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       toast.warning("Please login to add items to cart");
       return;
@@ -70,22 +62,30 @@ function ProductDetail() {
         }
       );
 
-      toast.success(`${product.name} added to cart 🛒`, {
-        position: "bottom-right",
-        autoClose: 1500,
-        theme: "colored",
-      });
+      // 🔥 CUSTOM CART TOAST (TOP SLIDE)
+      toast(
+        ({ closeToast }) => (
+          <CartToast
+            product={product}
+            size={size}
+            closeToast={closeToast}
+          />
+        ),
+        {
+          autoClose: false,
+          closeButton: false,
+          className: "cart-toast-wrapper",
+        }
+      );
+
     } catch (error) {
-      console.error("Add to cart error:", error);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  /* ======================
-     UI STATES
-  ====================== */
+  /* UI STATES */
   if (product === false) {
     return (
       <h4 className="text-center my-5">
@@ -94,7 +94,7 @@ function ProductDetail() {
     );
   }
 
-  if (product === null) {
+  if (!product) {
     return (
       <h4 className="text-center my-5">
         Loading...
@@ -102,9 +102,7 @@ function ProductDetail() {
     );
   }
 
-  /* ======================
-     PRICE LOGIC
-  ====================== */
+  /* PRICE LOGIC */
   const discountPercent = 20;
   const oldPrice = product.price;
   const newPrice = Math.round(oldPrice * (1 - discountPercent / 100));
@@ -112,14 +110,38 @@ function ProductDetail() {
   return (
     <div className="container product-detail">
       <div className="row align-items-start">
-        {/* LEFT IMAGE */}
-        <div className="col-md-6 text-center">
-          <div className="image-wrapper">
-            <img src={selectedImg} alt={product.name} />
+
+        {/* LEFT IMAGE SECTION */}
+        <div className="col-md-6">
+          <div className="image-section">
+
+            <div className="image-wrapper">
+              <img src={selectedImg} alt={product.name} />
+            </div>
+
+            <div className="thumbnail-row">
+              {(product.images?.length
+                ? product.images
+                : [product.image, product.image, product.image, product.image]
+              )
+                .slice(0, 4)
+                .map((img, index) => (
+                  <div
+                    key={index}
+                    className={`thumbnail-box ${
+                      selectedImg === img ? "active" : ""
+                    }`}
+                    onClick={() => setSelectedImg(img)}
+                  >
+                    <img src={img} alt="thumb" />
+                  </div>
+                ))}
+            </div>
+
           </div>
         </div>
 
-        {/* RIGHT INFO */}
+        {/* RIGHT INFO (UNCHANGED) */}
         <div className="col-md-6 product-info-box">
           <h2 className="product-title">{product.name}</h2>
 
@@ -127,27 +149,26 @@ function ProductDetail() {
             ★★★★☆ <span>({product.numReviews} ratings)</span>
           </div>
 
-          {/* PRICE */}
           <div className="price-section">
             <div className="price-row">
-              <span className="old-price">₹{oldPrice}</span>
               <span className="price">₹{newPrice}</span>
+              <span className="old-price">₹{oldPrice}</span>
             </div>
 
             <div className="discount-box">
               {discountPercent}% OFF
             </div>
 
-            <span className="tax">Inclusive of all taxes</span>
+            <span className="tax">
+              Inclusive of all taxes
+            </span>
           </div>
 
-          {/* DESCRIPTION */}
           <p className="description">
             {product.description ||
               "Premium sneakers crafted with breathable material, cushioned sole and superior grip."}
           </p>
 
-          {/* SIZE */}
           <div className="size-section">
             <h6>Shoe Size</h6>
             <div className="sizes">
@@ -163,7 +184,6 @@ function ProductDetail() {
             </div>
           </div>
 
-          {/* QUANTITY */}
           <div className="qty-section">
             <h6>Quantity</h6>
             <div className="qty-control">
@@ -176,8 +196,6 @@ function ProductDetail() {
               </button>
             </div>
           </div>
-
-          {/* BUTTONS */}
 
           <div className="action-buttons">
             <button
@@ -194,10 +212,9 @@ function ProductDetail() {
             >
               BUY NOW
             </button>
-
           </div>
-
         </div>
+
       </div>
     </div>
   );

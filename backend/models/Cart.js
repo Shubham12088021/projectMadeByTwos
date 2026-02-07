@@ -13,15 +13,33 @@ const cartItemSchema = new mongoose.Schema({
   }
 });
 
+// ♻️ Recycle bin item schema
+const removedItemSchema = new mongoose.Schema({
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true
+  },
+  qty: {
+    type: Number,
+    required: true
+  },
+  removedAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 const cartSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      unique: true // one cart per user
+      unique: true
     },
-    items: [cartItemSchema]
+    items: [cartItemSchema],
+    removedItems: [removedItemSchema] // ♻️ recycle bin
   },
   { timestamps: true }
 );

@@ -12,9 +12,12 @@ const Cart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/cart", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const { data } = await axios.get(
+          "http://localhost:5000/api/cart",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setCart(data);
       } catch (err) {
         console.log(err);
@@ -26,28 +29,47 @@ const Cart = () => {
   }, [token]);
 
   const increaseQty = async (id) => {
-    setBtnLoading(id + "+");
-    const { data } = await axios.post(
-      "http://localhost:5000/api/cart/add",
-      { productId: id, qty: 1 },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    setCart(data);
-    setBtnLoading(null);
+    try {
+      setBtnLoading(id + "+");
+      const { data } = await axios.post(
+        "http://localhost:5000/api/cart/add",
+        { productId: id, qty: 1 },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCart(data);
+    } finally {
+      setBtnLoading(null);
+    }
   };
 
   const decreaseQty = async (id) => {
-    setBtnLoading(id + "-");
-    const { data } = await axios.post(
-      "http://localhost:5000/api/cart/remove",
-      { productId: id },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    setCart(data);
-    setBtnLoading(null);
+    try {
+      setBtnLoading(id + "-");
+      const { data } = await axios.post(
+        "http://localhost:5000/api/cart/remove",
+        { productId: id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCart(data);
+    } finally {
+      setBtnLoading(null);
+    }
   };
 
-  /* 🔄 FULL PAGE LOADER */
+  const removeItem = async (id) => {
+    try {
+      setBtnLoading(id + "x");
+      const { data } = await axios.post(
+        "http://localhost:5000/api/cart/remove",
+        { productId: id, removeAll: true },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCart(data);
+    } finally {
+      setBtnLoading(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="loader-screen">
@@ -83,11 +105,7 @@ const Cart = () => {
                   disabled={btnLoading === item.product._id + "-"}
                   onClick={() => decreaseQty(item.product._id)}
                 >
-                  {btnLoading === item.product._id + "-" ? (
-                    <span className="btn-spinner"></span>
-                  ) : (
-                    "−"
-                  )}
+                  −
                 </button>
 
                 <span>{item.qty}</span>
@@ -96,17 +114,21 @@ const Cart = () => {
                   disabled={btnLoading === item.product._id + "+"}
                   onClick={() => increaseQty(item.product._id)}
                 >
-                  {btnLoading === item.product._id + "+" ? (
-                    <span className="btn-spinner"></span>
-                  ) : (
-                    "+"
-                  )}
+                  +
                 </button>
               </div>
             </div>
 
             <div className="cart-price">
               ₹{item.product.price * item.qty}
+
+              <button
+                className="remove-btn"
+                disabled={btnLoading === item.product._id + "x"}
+                onClick={() => removeItem(item.product._id)}
+              >
+                Remove
+              </button>
             </div>
           </div>
         ))}

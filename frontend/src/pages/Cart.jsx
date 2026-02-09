@@ -6,9 +6,13 @@ const Cart = () => {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [btnLoading, setBtnLoading] = useState(null);
+  const [cartCount, setCartCount] = useState(
+    Number(localStorage.getItem("cartCount")) || 0
+  );
 
   const token = localStorage.getItem("token");
 
+  /* FETCH CART */
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -27,6 +31,18 @@ const Cart = () => {
     };
     fetchCart();
   }, [token]);
+
+  /* SYNC CART COUNT */
+  useEffect(() => {
+    if (cart && cart.items) {
+      const totalQty = cart.items.reduce(
+        (acc, item) => acc + item.qty,
+        0
+      );
+      localStorage.setItem("cartCount", totalQty);
+      setCartCount(totalQty);
+    }
+  }, [cart]);
 
   const increaseQty = async (id) => {
     try {
@@ -71,12 +87,7 @@ const Cart = () => {
   };
 
   if (loading) {
-    return (
-      <div className="loader-screen">
-        <div className="spinner"></div>
-        <p>Loading your cart…</p>
-      </div>
-    );
+    return <h2>Loading cart…</h2>;
   }
 
   if (!cart || cart.items.length === 0)
@@ -90,7 +101,12 @@ const Cart = () => {
   return (
     <div className="cart-wrapper">
       <div className="cart-glass">
-        <h1 className="cart-title">Your Shopping Cart</h1>
+
+        {/* 🛒 CART BUTTON WITH COUNT */}
+        <button className="cart-btn">
+          🛒 Cart
+          <span className="cart-count">{cartCount}</span>
+        </button>
 
         {cart.items.map((item) => (
           <div className="cart-card" key={item.product._id}>
@@ -101,19 +117,11 @@ const Cart = () => {
               <p>₹{item.product.price}</p>
 
               <div className="qty-box">
-                <button
-                  disabled={btnLoading === item.product._id + "-"}
-                  onClick={() => decreaseQty(item.product._id)}
-                >
+                <button onClick={() => decreaseQty(item.product._id)}>
                   −
                 </button>
-
                 <span>{item.qty}</span>
-
-                <button
-                  disabled={btnLoading === item.product._id + "+"}
-                  onClick={() => increaseQty(item.product._id)}
-                >
+                <button onClick={() => increaseQty(item.product._id)}>
                   +
                 </button>
               </div>
@@ -121,10 +129,8 @@ const Cart = () => {
 
             <div className="cart-price">
               ₹{item.product.price * item.qty}
-
               <button
                 className="remove-btn"
-                disabled={btnLoading === item.product._id + "x"}
                 onClick={() => removeItem(item.product._id)}
               >
                 Remove
@@ -137,7 +143,6 @@ const Cart = () => {
       <div className="checkout-glass">
         <h3>Subtotal</h3>
         <h1>₹{subtotal}</h1>
-        <button className="buy-btn">🚀 Proceed to Buy</button>
       </div>
     </div>
   );

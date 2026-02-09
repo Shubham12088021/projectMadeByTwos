@@ -8,7 +8,12 @@ const productSchema = new mongoose.Schema(
     category: String,
     description: String,
 
-    // ⭐ NEW
+    // ⭐ DYNAMIC DISCOUNT (NEW)
+    discount: {
+      type: Number, // percentage (0–100)
+      default: 0,
+    },
+
     rating: {
       type: Number,
       default: 4,

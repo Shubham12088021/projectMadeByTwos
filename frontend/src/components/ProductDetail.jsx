@@ -50,6 +50,7 @@ function ProductDetail() {
     try {
       setLoading(true);
 
+      // ✅ ADD TO CART API
       await axios.post(
         "http://localhost:5000/api/cart/add",
         {
@@ -62,7 +63,11 @@ function ProductDetail() {
         }
       );
 
-      // 🔥 CUSTOM CART TOAST (TOP SLIDE)
+      // 🔥 CART COUNT SUFFIX FIX (THIS WAS MISSING)
+      const prevCount = Number(localStorage.getItem("cartCount")) || 0;
+      localStorage.setItem("cartCount", prevCount + qty);
+
+      // 🔥 CUSTOM CART TOAST
       toast(
         ({ closeToast }) => (
           <CartToast
@@ -141,7 +146,7 @@ function ProductDetail() {
           </div>
         </div>
 
-        {/* RIGHT INFO (UNCHANGED) */}
+        {/* RIGHT INFO */}
         <div className="col-md-6 product-info-box">
           <h2 className="product-title">{product.name}</h2>
 
@@ -151,8 +156,8 @@ function ProductDetail() {
 
           <div className="price-section">
             <div className="price-row">
-              <span className="price">₹{newPrice}</span>
               <span className="old-price">₹{oldPrice}</span>
+              <span className="price">₹{newPrice}</span>
             </div>
 
             <div className="discount-box">

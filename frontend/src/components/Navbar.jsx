@@ -1,13 +1,31 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
 import "./navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const isAuthenticated = Boolean(localStorage.getItem("token"));
 
+  const [cartCount, setCartCount] = useState(
+    Number(localStorage.getItem("cartCount")) || 0
+  );
+
+  // Keep cart count in sync
+  useEffect(() => {
+    const updateCartCount = () => {
+      setCartCount(Number(localStorage.getItem("cartCount")) || 0);
+    };
+
+    updateCartCount();
+    const interval = setInterval(updateCartCount, 500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("cartCount");
     navigate("/login");
   };
 
@@ -16,7 +34,7 @@ const Navbar = () => {
       <div className="container">
         <div className="row w-100 align-items-center">
 
-          {/* LEFT SECTION */}
+          {/* LEFT */}
           <div className="col-8 d-flex align-items-center">
             <Link
               to="/"
@@ -27,24 +45,18 @@ const Navbar = () => {
 
             <ul className="navbar-nav flex-row gap-4 ms-3">
               <li className="nav-item">
-                <Link className="nav-link premium-link" to="/">
-                  Home
-                </Link>
+                <Link className="nav-link premium-link" to="/">Home</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link premium-link" to="/men">
-                  Men
-                </Link>
+                <Link className="nav-link premium-link" to="/men">Men</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link premium-link" to="/women">
-                  Women
-                </Link>
+                <Link className="nav-link premium-link" to="/women">Women</Link>
               </li>
             </ul>
           </div>
 
-          {/* RIGHT SECTION */}
+          {/* RIGHT */}
           <div className="col-4 d-flex justify-content-end align-items-center gap-3">
             {!isAuthenticated ? (
               <Link
@@ -56,9 +68,17 @@ const Navbar = () => {
               </Link>
             ) : (
               <>
-                <Link to="/cart" className="cart-btn d-flex align-items-center gap-2">
-                  <FaShoppingCart size={18} />
-                  Cart
+                {/* 🛒 AMAZON STYLE CART */}
+                <Link to="/cart" className="cart-btn amazon-cart">
+                  <div className="cart-icon-wrapper">
+                    <FaShoppingCart size={20} />
+                    {cartCount > 0 && (
+                      <span className="amazon-cart-badge">
+                        {cartCount}
+                      </span>
+                    )}
+                  </div>
+                  {/* <span className="cart-text">Cart</span> */}
                 </Link>
 
                 <button

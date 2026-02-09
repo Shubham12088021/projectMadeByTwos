@@ -38,7 +38,6 @@
   color: #111;
 }
 
-/* underline animation */
 .premium-link::after {
   content: "";
   position: absolute;
@@ -54,37 +53,46 @@
   width: 100%;
 }
 
-/* active link support (future ready) */
-.premium-link.active {
-  color: #111;
-}
-
 /* =========================
-   CART BUTTON
+   AMAZON STYLE CART
 ========================= */
-.cart-btn {
+.amazon-cart {
   display: flex;
   align-items: center;
-  gap: 8px;
-  border: 1px solid #111;
-  padding: 8px 20px;
-  border-radius: 30px;
-  color: #111;
+  gap: 6px;
   text-decoration: none;
+  color: #111;
   font-weight: 500;
-  transition: all 0.25s ease;
+  position: relative;
 }
 
-.cart-btn:hover {
-  background-color: #111;
-  color: #fff;
-  transform: translateY(-2px);
+.cart-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-/* keyboard accessibility */
-.cart-btn:focus-visible {
-  outline: 2px solid #caa86a;
-  outline-offset: 3px;
+/* 🔴 AMAZON BADGE */
+.amazon-cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background: #f08804; /* Amazon orange */
+  color: #111;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+
+.cart-text {
+  font-size: 14px;
 }
 
 /* =========================
@@ -104,9 +112,4 @@
 .logout-btn:hover {
   background-color: #b02a37;
   transform: translateY(-2px);
-}
-
-.logout-btn:focus-visible {
-  outline: 2px solid #ffb3b3;
-  outline-offset: 3px;
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CollectionHero from "./CollectionHero";
 import ProductCard from "./ProductCard";
-import BrandStory from "./BrandStory";   // ✅ ADD THIS
+import BrandStory from "./BrandStory";
 
 function Womens() {
   const [products, setProducts] = useState([]);
@@ -20,10 +20,27 @@ function Womens() {
     <>
       {/* HERO */}
       <CollectionHero
-        title="Women's Collection"
-        description="Elegant styles, new trends and timeless fashion curated for every woman."
-        image="https://images.unsplash.com/photo-1520975916090-3105956dac38"
         overlay={0.45}
+        slides={[
+          {
+            image: "https://tse1.mm.bing.net/th/id/OIP.p2pMi7fQ9Dl7FTKH7u4eegHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
+            title: "Elegant Essentials",
+            description:
+              "Refined styles designed to elevate your everyday elegance."
+          },
+          {
+            image: "https://tse3.mm.bing.net/th/id/OIP.i2MDujBmf1C9WPhkZVFcWgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3",
+            title: "Modern Grace",
+            description:
+              "Soft silhouettes and modern cuts made for confident women."
+          },
+          {
+            image: "https://tse4.mm.bing.net/th/id/OIP.BbbPVzNrA5LMj-7tPI14RgHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+            title: "Timeless Trends",
+            description:
+              "Classic fashion blended with contemporary trends."
+          }
+        ]}
       />
 
       {/* PRODUCTS */}
@@ -41,7 +58,7 @@ function Womens() {
         )}
       </div>
 
-      {/* ✅ BRAND STORY (WOMEN CONTENT WILL SHOW HERE) */}
+      {/* BRAND STORY */}
       <BrandStory />
     </>
   );

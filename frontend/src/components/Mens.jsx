@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CollectionHero from "./CollectionHero";
 import ProductCard from "./ProductCard";
-import BrandStory from "./BrandStory";   // ✅ ADD THIS
+import BrandStory from "./BrandStory";
 
 function Mens() {
   const [products, setProducts] = useState([]);
@@ -20,11 +20,26 @@ function Mens() {
     <>
       {/* HERO */}
       <CollectionHero
-        title="Men's Collection"
-        description="Discover premium styles for modern men."
-        image="https://images.unsplash.com/photo-1520975916090-3105956dac38"
-        overlay={0.55}
-      />
+  overlay={0.55}
+  slides={[
+    {
+      image: "https://tse4.mm.bing.net/th/id/OIP.hw3RcyX4kR_nGn0ejkBwSgHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+      title: "Urban Essentials",
+      description: "Minimal, sharp and designed for everyday confidence."
+    },
+    {
+      image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2hvZXN8ZW58MHx8MHx8fDA%3D",
+      title: "Street Ready",
+      description: "Modern fits inspired by street culture and comfort."
+    },
+    {
+      image: "https://tse1.mm.bing.net/th/id/OIP.pFz7OqYIutL-GYODfw8ZrwHaEJ?rs=1&pid=ImgDetMain&o=7&rm=3",
+      title: "Premium Classics",
+      description: "Timeless fashion crafted with premium fabrics."
+    }
+  ]}
+/>
+
 
       {/* PRODUCTS */}
       <div className="container my-5">
@@ -41,7 +56,7 @@ function Mens() {
         )}
       </div>
 
-      {/* ✅ BRAND STORY (MEN CONTENT WILL SHOW HERE) */}
+      {/* BRAND STORY */}
       <BrandStory />
     </>
   );

@@ -34,7 +34,7 @@ body {
   }
 }
 
-/* ===== EMPTY CART (WIDER + SLIGHTLY BIGGER) ===== */
+/* ===== EMPTY CART ===== */
 .empty-cart-section {
   max-width: 1200px;
   margin: 70px auto;
@@ -45,27 +45,27 @@ body {
 
 .empty-cart-box {
   width: 100%;
-  max-width: 560px;          /* 👈 width thodi aur badhi */
+  max-width: 560px;
   background: #fff;
-  padding: 36px 52px;        /* 👈 overall size increase */
+  padding: 36px 52px;
   border-radius: 18px;
   text-align: center;
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
 }
 
 .empty-cart-box h2 {
-  font-size: 25px;           /* 👈 text thoda bada */
+  font-size: 25px;
   margin-bottom: 10px;
 }
 
 .empty-cart-box p {
   color: #666;
-  font-size: 15px;           /* 👈 readable & clean */
+  font-size: 15px;
   margin-bottom: 24px;
 }
 
 .continue-btn {
-  padding: 13px 30px;        /* 👈 button thoda bigger */
+  padding: 13px 30px;
   border-radius: 10px;
   border: none;
   background: #111;
@@ -78,18 +78,6 @@ body {
 .continue-btn:hover {
   background: #333;
   transform: translateY(-2px);
-}
-
-/* Mobile adjustment */
-@media (max-width: 600px) {
-  .empty-cart-box {
-    max-width: 100%;
-    padding: 30px 26px;
-  }
-
-  .empty-cart-box h2 {
-    font-size: 22px;
-  }
 }
 
 /* ===== CART LAYOUT ===== */
@@ -141,7 +129,7 @@ body {
   padding: 10px;
 }
 
-/* Info */
+/* ===== INFO ===== */
 .cart-info {
   flex: 1;
 }
@@ -186,34 +174,59 @@ body {
   font-weight: 600;
 }
 
-/* ===== PRICE ===== */
+/* ===== PRICE + ICON (UPDATED) ===== */
 .cart-price {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;               /* 👈 price & icon spacing */
   font-size: 18px;
   font-weight: 600;
-  text-align: right;
 }
 
-/* Remove */
+.item-total {
+  white-space: nowrap;
+}
+
+/* ===== REMOVE ICON BUTTON ===== */
 .remove-btn {
-  margin-top: 10px;
-  padding: 6px 14px;
   background: transparent;
   border: 1px solid #ff4d4f;
   color: #ff4d4f;
-  border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
-.remove-btn:hover {
+/* Icon styling */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 16px;
+}
+
+/* 🔥 Attractive hover */
+.icon-btn:hover {
   background: #ff4d4f;
   color: #fff;
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 6px 14px rgba(255, 77, 79, 0.35);
 }
 
-.remove-btn:disabled {
-  opacity: 0.6;
+/* Click effect */
+.icon-btn:active {
+  transform: scale(0.95);
+}
+
+/* Disabled state */
+.icon-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* ===== CHECKOUT ===== */
@@ -257,6 +270,6 @@ body {
   }
 
   .cart-price {
-    text-align: center;
+    justify-content: center;
   }
 }

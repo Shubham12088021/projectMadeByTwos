@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Cart.css";
 import { useCart } from "../context/CartContext";
+import { FaTrashAlt } from "react-icons/fa";
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
@@ -175,18 +176,20 @@ const Cart = () => {
             </div>
 
             <div className="cart-price">
-              ₹{item.product.price * item.qty}
+  <span className="item-total">
+    ₹{item.product.price * item.qty}
+  </span>
 
-              <button
-                className="remove-btn"
-                disabled={btnLoading === item.product._id + "x"}
-                onClick={() =>
-                  removeItem(item.product._id, item.qty)
-                }
-              >
-                Remove
-              </button>
-            </div>
+  <button
+    className="remove-btn icon-btn"
+    disabled={btnLoading === item.product._id + "x"}
+    onClick={() => removeItem(item.product._id, item.qty)}
+    title="Remove item"
+  >
+    <FaTrashAlt />
+  </button>
+</div>
+
           </div>
         ))}
       </div>

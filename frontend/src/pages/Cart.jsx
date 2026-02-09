@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./Cart.css";
+import { useCart } from "../context/CartContext";
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [btnLoading, setBtnLoading] = useState(null);
-  const [cartCount, setCartCount] = useState(
-    Number(localStorage.getItem("cartCount")) || 0
-  );
 
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
-  /* FETCH CART */
+  // 🔥 IMPORTANT
+  const { syncCart, increaseCart, decreaseCart } = useCart();
+
+  /* ===== FETCH CART ===== */
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -22,76 +25,117 @@ const Cart = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
         setCart(data);
+        syncCart();
       } catch (err) {
         console.log(err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchCart();
   }, [token]);
 
-  /* SYNC CART COUNT */
-  useEffect(() => {
-    if (cart && cart.items) {
-      const totalQty = cart.items.reduce(
-        (acc, item) => acc + item.qty,
-        0
-      );
-      localStorage.setItem("cartCount", totalQty);
-      setCartCount(totalQty);
-    }
-  }, [cart]);
-
+  /* ===== INCREASE QTY ===== */
   const increaseQty = async (id) => {
     try {
       setBtnLoading(id + "+");
+
+      // 🔥 OPTIMISTIC BADGE
+      increaseCart(1);
+
       const { data } = await axios.post(
         "http://localhost:5000/api/cart/add",
         { productId: id, qty: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       setCart(data);
+      syncCart();
+    } catch {
+      // fallback
+      syncCart();
     } finally {
       setBtnLoading(null);
     }
   };
 
+  /* ===== DECREASE QTY ===== */
   const decreaseQty = async (id) => {
     try {
       setBtnLoading(id + "-");
+
+      // 🔥 OPTIMISTIC BADGE
+      decreaseCart(1);
+
       const { data } = await axios.post(
         "http://localhost:5000/api/cart/remove",
         { productId: id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       setCart(data);
+      syncCart();
+    } catch {
+      syncCart();
     } finally {
       setBtnLoading(null);
     }
   };
 
-  const removeItem = async (id) => {
+  /* ===== REMOVE ITEM ===== */
+  const removeItem = async (id, qty) => {
     try {
       setBtnLoading(id + "x");
+
+      // 🔥 OPTIMISTIC BADGE
+      decreaseCart(qty);
+
       const { data } = await axios.post(
         "http://localhost:5000/api/cart/remove",
         { productId: id, removeAll: true },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       setCart(data);
+      syncCart();
+    } catch {
+      syncCart();
     } finally {
       setBtnLoading(null);
     }
   };
 
+  /* ===== LOADER ===== */
   if (loading) {
-    return <h2>Loading cart…</h2>;
+    return (
+      <div className="loader-screen">
+        <div className="spinner"></div>
+        <p>Loading your cart…</p>
+      </div>
+    );
   }
 
-  if (!cart || cart.items.length === 0)
-    return <h2 className="empty-cart">🛒 Your cart is empty</h2>;
+  /* ===== EMPTY CART ===== */
+  if (!cart || cart.items.length === 0) {
+    return (
+      <div className="empty-cart-section">
+        <div className="empty-cart-box">
+          <h2>🛒 Your cart is empty</h2>
+          <p>Looks like you haven’t added anything yet</p>
+
+          <button
+            className="continue-btn"
+            onClick={() => navigate("/")}
+          >
+            ← Continue Shopping
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const subtotal = cart.items.reduce(
     (acc, item) => acc + item.product.price * item.qty,
@@ -101,12 +145,7 @@ const Cart = () => {
   return (
     <div className="cart-wrapper">
       <div className="cart-glass">
-
-        {/* 🛒 CART BUTTON WITH COUNT */}
-        <button className="cart-btn">
-          🛒 Cart
-          <span className="cart-count">{cartCount}</span>
-        </button>
+        <h1 className="cart-title">Your Shopping Cart</h1>
 
         {cart.items.map((item) => (
           <div className="cart-card" key={item.product._id}>
@@ -117,11 +156,19 @@ const Cart = () => {
               <p>₹{item.product.price}</p>
 
               <div className="qty-box">
-                <button onClick={() => decreaseQty(item.product._id)}>
+                <button
+                  disabled={btnLoading === item.product._id + "-"}
+                  onClick={() => decreaseQty(item.product._id)}
+                >
                   −
                 </button>
+
                 <span>{item.qty}</span>
-                <button onClick={() => increaseQty(item.product._id)}>
+
+                <button
+                  disabled={btnLoading === item.product._id + "+"}
+                  onClick={() => increaseQty(item.product._id)}
+                >
                   +
                 </button>
               </div>
@@ -129,9 +176,13 @@ const Cart = () => {
 
             <div className="cart-price">
               ₹{item.product.price * item.qty}
+
               <button
                 className="remove-btn"
-                onClick={() => removeItem(item.product._id)}
+                disabled={btnLoading === item.product._id + "x"}
+                onClick={() =>
+                  removeItem(item.product._id, item.qty)
+                }
               >
                 Remove
               </button>
@@ -143,6 +194,7 @@ const Cart = () => {
       <div className="checkout-glass">
         <h3>Subtotal</h3>
         <h1>₹{subtotal}</h1>
+        <button className="buy-btn">🚀 Proceed to Buy</button>
       </div>
     </div>
   );

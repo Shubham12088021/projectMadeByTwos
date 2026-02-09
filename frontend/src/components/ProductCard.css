@@ -1,3 +1,4 @@
+/* LINK RESET */
 .product-link {
   text-decoration: none;
   color: inherit;
@@ -6,7 +7,7 @@
 
 /* CARD */
 .product-card {
-  background: #ffffff;
+  background: #fff;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -16,15 +17,16 @@
 
 .product-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.15);
 }
 
 /* IMAGE */
 .img-wrapper {
+  position: relative;
   width: 100%;
   height: 240px;
+  background: #f4f4f4;
   overflow: hidden;
-  background: #f3f3f3;
 }
 
 .product-img {
@@ -38,18 +40,48 @@
   transform: scale(1.08);
 }
 
+/* 🔥 VIEW DETAILS OVERLAY */
+.view-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.view-overlay span {
+  background: #fff;
+  color: #111;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  transform: translateY(10px);
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .view-overlay {
+  opacity: 1;
+}
+
+.product-card:hover .view-overlay span {
+  transform: translateY(0);
+}
+
 /* INFO */
 .product-info {
   padding: 14px 16px 18px;
   text-align: center;
 }
 
-/* NAME */
 .product-name {
   font-size: 15px;
   font-weight: 600;
-  margin-bottom: 6px;
   color: #222;
+  margin-bottom: 6px;
 }
 
 /* RATING */
@@ -65,53 +97,44 @@
   margin-left: 4px;
 }
 
-/* PRICE BOX */
+/* PRICE */
 .price-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 6px;
 }
 
-/* OLD + NEW PRICE SAME LINE */
 .price-row {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* OLD PRICE */
 .old-price {
   font-size: 14px;
   color: #888;
   text-decoration: line-through;
 }
 
-/* NEW PRICE */
 .new-price {
   font-size: 17px;
   font-weight: 700;
-  color: #000;
+  color: #111;
 }
 
 /* DISCOUNT */
 .discount-box {
   margin-top: 6px;
   padding: 4px 12px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   color: #2e7d32;
-  background: linear-gradient(
-    135deg,
-    rgba(46, 125, 50, 0.15),
-    rgba(46, 125, 50, 0.05)
-  );
+  background: rgba(46, 125, 50, 0.12);
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-card:hover .discount-box {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(46, 125, 50, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(46, 125, 50, 0.3);
 }

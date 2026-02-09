@@ -15,6 +15,7 @@ import Footer from "./components/Footer";
 import Cart from "./pages/Cart";
 import BrandStory from "./components/BrandStory";
 import SpottedSection from "./components/SpottedSection";
+import Contact from "./components/Contact";
 
 /* 🔔 TOASTIFY */
 import { ToastContainer, Slide } from "react-toastify";
@@ -41,6 +42,7 @@ function App() {
 
         <Route path="/men" element={<Mens />} />
         <Route path="/women" element={<Womens />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

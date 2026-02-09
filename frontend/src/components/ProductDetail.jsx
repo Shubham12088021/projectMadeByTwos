@@ -4,6 +4,7 @@ import axios from "axios";
 import "./productDetail.css";
 import { toast } from "react-toastify";
 import CartToast from "./CartToast";
+import { useCart } from "../context/CartContext";
 
 function ProductDetail() {
   const { id } = useParams();
@@ -14,11 +15,12 @@ function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  // 🔥 IMPORTANT
+  const { syncCart, increaseCart } = useCart();
+
   /* BUY NOW */
   const buyNowHandler = () => {
-    toast.info("Buy Now coming soon 🚀", {
-      autoClose: 1500,
-    });
+    toast.info("Buy Now coming soon 🚀", { autoClose: 1500 });
   };
 
   /* FETCH PRODUCT */
@@ -30,7 +32,7 @@ function ProductDetail() {
         );
         setProduct(res.data);
         setSelectedImg(res.data.image);
-      } catch (error) {
+      } catch {
         toast.error("Failed to load product");
         setProduct(false);
       }
@@ -47,10 +49,11 @@ function ProductDetail() {
       return;
     }
 
+    if (loading) return;
+
     try {
       setLoading(true);
 
-      // ✅ ADD TO CART API
       await axios.post(
         "http://localhost:5000/api/cart/add",
         {
@@ -63,11 +66,12 @@ function ProductDetail() {
         }
       );
 
-      // 🔥 CART COUNT SUFFIX FIX (THIS WAS MISSING)
-      const prevCount = Number(localStorage.getItem("cartCount")) || 0;
-      localStorage.setItem("cartCount", prevCount + qty);
+      // 🔥 INSTANT BADGE UPDATE
+      increaseCart(qty);
 
-      // 🔥 CUSTOM CART TOAST
+      // 🔒 BACKEND SYNC (FINAL TRUTH)
+      syncCart();
+
       toast(
         ({ closeToast }) => (
           <CartToast
@@ -77,13 +81,15 @@ function ProductDetail() {
           />
         ),
         {
-          autoClose: false,
+          autoClose: 2000,
           closeButton: false,
+          pauseOnHover: true,
+          draggable: true,
+          position: "top-right",
           className: "cart-toast-wrapper",
         }
       );
-
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
@@ -92,22 +98,13 @@ function ProductDetail() {
 
   /* UI STATES */
   if (product === false) {
-    return (
-      <h4 className="text-center my-5">
-        Product not found ❌
-      </h4>
-    );
+    return <h4 className="text-center my-5">Product not found ❌</h4>;
   }
 
   if (!product) {
-    return (
-      <h4 className="text-center my-5">
-        Loading...
-      </h4>
-    );
+    return <h4 className="text-center my-5">Loading...</h4>;
   }
 
-  /* PRICE LOGIC */
   const discountPercent = 20;
   const oldPrice = product.price;
   const newPrice = Math.round(oldPrice * (1 - discountPercent / 100));
@@ -116,10 +113,9 @@ function ProductDetail() {
     <div className="container product-detail">
       <div className="row align-items-start">
 
-        {/* LEFT IMAGE SECTION */}
+        {/* LEFT IMAGE */}
         <div className="col-md-6">
           <div className="image-section">
-
             <div className="image-wrapper">
               <img src={selectedImg} alt={product.name} />
             </div>
@@ -142,7 +138,6 @@ function ProductDetail() {
                   </div>
                 ))}
             </div>
-
           </div>
         </div>
 
@@ -156,17 +151,12 @@ function ProductDetail() {
 
           <div className="price-section">
             <div className="price-row">
-              <span className="old-price">₹{oldPrice}</span>
               <span className="price">₹{newPrice}</span>
+              <span className="old-price">₹{oldPrice}</span>
             </div>
 
-            <div className="discount-box">
-              {discountPercent}% OFF
-            </div>
-
-            <span className="tax">
-              Inclusive of all taxes
-            </span>
+            <div className="discount-box">{discountPercent}% OFF</div>
+            <span className="tax">Inclusive of all taxes</span>
           </div>
 
           <p className="description">
@@ -211,10 +201,7 @@ function ProductDetail() {
               {loading ? "Adding..." : "ADD TO CART"}
             </button>
 
-            <button
-              className="buy-now-btn"
-              onClick={buyNowHandler}
-            >
+            <button className="buy-now-btn" onClick={buyNowHandler}>
               BUY NOW
             </button>
           </div>

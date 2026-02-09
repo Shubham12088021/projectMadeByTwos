@@ -1,86 +1,98 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useCart } from "../context/CartContext"; // ✅ ADD
 import "./auth.css";
 
 function Register() {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
+  const { syncCart } = useCart(); // ✅ ADD
 
-        const res = await fetch("http://localhost:5000/api/users/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password }),
-        });
+  const submitHandler = async (e) => {
+    e.preventDefault();
 
-        const data = await res.json();
+    try {
+      const res = await fetch("http://localhost:5000/api/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-        if (res.ok) {
-            alert("Account created successfully. Please login.");
-            navigate("/login");
-        } else {
-            alert(data.message || "Registration failed");
-        }
-    };
+      const data = await res.json();
 
+      if (res.ok) {
+        // ✅ AUTO LOGIN AFTER REGISTER
+        localStorage.setItem("token", data.token);
 
-    return (
-        <div className="auth-page">
-            <div className="auth-card">
+        // 🔥 SYNC CART (will be 0 for new user, but important)
+        await syncCart();
 
-                {/* Title */}
-                <h2 className="title">Create account</h2>
-                <br />
+        // ✅ GO HOME
+        navigate("/");
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (error) {
+      alert("Something went wrong");
+    }
+  };
 
-                <form onSubmit={submitHandler}>
-                    <div className="field">
-                        <label>Full name</label>
-                        <input
-                            type="text"
-                            placeholder="Your name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                        />
-                    </div>
+  return (
+    <div className="auth-page">
+      <div className="auth-card">
 
-                    <div className="field">
-                        <label>Email address</label>
-                        <input
-                            type="email"
-                            placeholder="you@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
+        <h2 className="title">Create account</h2>
+        <br />
 
-                    <div className="field">
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            placeholder="Create a strong password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
+        <form onSubmit={submitHandler}>
+          <div className="field">
+            <label>Full name</label>
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-                    <button className="login-btn">
-                        Create account
-                    </button>
-                </form>
+          <div className="field">
+            <label>Email address</label>
+            <input
+              type="email"
+              placeholder="you@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-                <p className="switch-auth">
-                    Already have an account? <Link to="/login">Sign in</Link>
-                </p>
-            </div>
-        </div>
-    );
+          <div className="field">
+            <label>Password</label>
+            <input
+              type="password"
+              placeholder="Create a strong password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button className="login-btn">
+            Create account
+          </button>
+        </form>
+
+        <p className="switch-auth">
+          Already have an account?{" "}
+          <Link to="/login">Sign in</Link>
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export default Register;

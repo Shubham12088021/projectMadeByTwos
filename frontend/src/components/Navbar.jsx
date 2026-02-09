@@ -1,31 +1,18 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
-import { useEffect, useState } from "react";
 import "./navbar.css";
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const isAuthenticated = Boolean(localStorage.getItem("token"));
 
-  const [cartCount, setCartCount] = useState(
-    Number(localStorage.getItem("cartCount")) || 0
-  );
-
-  // Keep cart count in sync
-  useEffect(() => {
-    const updateCartCount = () => {
-      setCartCount(Number(localStorage.getItem("cartCount")) || 0);
-    };
-
-    updateCartCount();
-    const interval = setInterval(updateCartCount, 500);
-
-    return () => clearInterval(interval);
-  }, []);
+  // 🔥 SINGLE SOURCE OF TRUTH
+  const { cartCount, animateBadge } = useCart();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("cartCount");
+    sessionStorage.removeItem("cartCount");
     navigate("/login");
   };
 
@@ -45,13 +32,24 @@ const Navbar = () => {
 
             <ul className="navbar-nav flex-row gap-4 ms-3">
               <li className="nav-item">
-                <Link className="nav-link premium-link" to="/">Home</Link>
+                <NavLink className="nav-link premium-link" to="/" end>
+                  Home
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link className="nav-link premium-link" to="/men">Men</Link>
+                <NavLink className="nav-link premium-link" to="/men">
+                  Men
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link className="nav-link premium-link" to="/women">Women</Link>
+                <NavLink className="nav-link premium-link" to="/women">
+                  Women
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link premium-link" to="/contact">
+                  Contact
+                </NavLink>
               </li>
             </ul>
           </div>
@@ -68,8 +66,13 @@ const Navbar = () => {
               </Link>
             ) : (
               <>
-                {/* 🛒 AMAZON STYLE CART */}
-                <Link to="/cart" className="cart-btn amazon-cart">
+                {/* 🛒 CART */}
+                <Link
+                  to="/cart"
+                  className={`cart-btn amazon-cart ${
+                    animateBadge ? "pulse" : ""
+                  }`}
+                >
                   <div className="cart-icon-wrapper">
                     <FaShoppingCart size={20} />
                     {cartCount > 0 && (
@@ -78,7 +81,6 @@ const Navbar = () => {
                       </span>
                     )}
                   </div>
-                  {/* <span className="cart-text">Cart</span> */}
                 </Link>
 
                 <button

@@ -1,19 +1,50 @@
 import "./newArrivals.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaShoppingCart } from "react-icons/fa";
+import axios from "axios";
+import { useCart } from "../context/CartContext";
 
 function NewArrivals() {
   const [activeTab, setActiveTab] = useState("men");
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
+  const [loadingId, setLoadingId] = useState(null);
 
-  // 🔁 jab tab change ho, backend se data lao
+  const navigate = useNavigate();
+  const { setCartCount } = useCart();
+  const token = localStorage.getItem("token");
+
+  // 🔁 fetch products
   useEffect(() => {
     fetch(`http://localhost:5000/api/products?category=${activeTab}`)
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error(err));
   }, [activeTab]);
+
+  // 🛒 ADD TO CART
+  const addToCart = async (productId) => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setLoadingId(productId);
+      const { data } = await axios.post(
+        "http://localhost:5000/api/cart/add",
+        { productId, qty: 1 },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // ✅ update navbar badge (unique items)
+      setCartCount(data.items.length);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingId(null);
+    }
+  };
 
   const handleViewAll = () => {
     navigate(`/${activeTab}`);
@@ -39,7 +70,7 @@ function NewArrivals() {
         </span>
       </div>
 
-      {/* PRODUCTS (ONLY FIRST 3 FROM THAT PAGE DATA) */}
+      {/* PRODUCTS */}
       <div className="row g-4">
         {products.slice(0, 5).map(item => (
           <div className="col-md-4" key={item._id}>
@@ -48,25 +79,30 @@ function NewArrivals() {
 
               <img src={item.image} alt={item.name} />
 
-              {/* NAME */}
               <h6 className="product-name">{item.name}</h6>
 
               {/* ⭐ RATING */}
               <div className="rating">
                 {"★".repeat(Math.round(item.rating))}
                 {"☆".repeat(5 - Math.round(item.rating))}
-                <span className="review-count">
-                  ({item.numReviews})
-                </span>
+                <span className="review-count">({item.numReviews})</span>
               </div>
 
-              {/* PRICE */}
               <p className="price">₹{item.price}</p>
+
+              {/* 🛒 ADD TO CART ICON */}
+              <button
+                className="add-cart-btn"
+                disabled={loadingId === item._id}
+                onClick={() => addToCart(item._id)}
+              >
+                <FaShoppingCart />
+                {loadingId === item._id ? "Adding..." : "Add to Cart"}
+              </button>
             </div>
           </div>
         ))}
       </div>
-
 
       {/* VIEW ALL */}
       <div className="text-center mt-4">

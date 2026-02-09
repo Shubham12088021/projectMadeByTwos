@@ -1,0 +1,149 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* PAGE BACKGROUND (OUTER WHITE) */
+.contact-page {
+  min-height: calc(100vh - 80px);
+  width: 100%;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+}
+
+/* CENTER CARD (INNER WHITE, DIFFERENT FEEL) */
+.contact-wrapper {
+  width: 100%;
+  max-width: 620px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 44px 40px;
+  color: #1f2430;
+
+  /* DIFFERENCE */
+  border: 1px solid #eef0f5;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+
+  /* ENTRY ANIMATION */
+  animation: fadeUp 0.8s ease;
+  transition: all 0.4s ease;
+}
+
+/* CARD HOVER EFFECT */
+.contact-wrapper:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.12);
+}
+
+/* HEADING */
+.contact-wrapper h2 {
+  font-size: 2.7rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* SUBTITLE */
+.contact-subtitle {
+  text-align: center;
+  font-size: 1.05rem;
+  color: #6b7280;
+  margin-bottom: 35px;
+}
+
+/* FORM */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* LABEL */
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+/* INPUTS */
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 14px;
+  border: 1.5px solid #e5e7eb;
+  background: #fafafa;
+  color: #111827;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+/* PLACEHOLDER */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* INPUT HOVER */
+.form-group input:hover,
+.form-group textarea:hover {
+  background: #ffffff;
+  border-color: #c7cbe4;
+}
+
+/* INPUT FOCUS */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #6b72d6;
+  box-shadow: 0 0 0 3px rgba(107, 114, 214, 0.2);
+}
+
+/* BUTTON */
+.contact-btn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 15px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(135deg, #6b72d6, #5a63c7);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.35s ease;
+}
+
+/* BUTTON HOVER */
+.contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(90, 99, 199, 0.35);
+  filter: brightness(1.05);
+}
+
+/* ENTRY ANIMATION */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .contact-wrapper {
+    padding: 32px 24px;
+  }
+
+  .contact-wrapper h2 {
+    font-size: 2.1rem;
+  }
+}

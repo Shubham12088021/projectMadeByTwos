@@ -44,7 +44,7 @@ function NewArrivals() {
 
       {/* 🔹 Products */}
       <div className="row g-4">
-        {products.slice(0, 6).map(item => {
+        {products.slice(0, 5).map(item => {
           const discountPercent = 20;
           const oldPrice = item.price;
           const newPrice = Math.round(

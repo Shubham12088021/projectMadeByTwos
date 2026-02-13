@@ -150,14 +150,15 @@ function ProductDetail() {
           </div>
 
           <div className="price-section">
-            <div className="price-row">
-              <span className="price">₹{newPrice}</span>
-              <span className="old-price">₹{oldPrice}</span>
-            </div>
+  <div className="price-row">
+    <span className="price">₹{newPrice}</span>
+    <span className="old-price">₹{oldPrice}</span>
+    <span className="discount-inline">{discountPercent}% OFF</span>
+  </div>
 
-            <div className="discount-box">{discountPercent}% OFF</div>
-            <span className="tax">Inclusive of all taxes</span>
-          </div>
+  <span className="tax">Inclusive of all taxes</span>
+</div>
+
 
           <p className="description">
             {product.description ||

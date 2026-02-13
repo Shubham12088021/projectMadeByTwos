@@ -23,13 +23,19 @@ exports.getMyCart = async (req, res) => {
 };
 
 /* =========================
-   ADD TO CART
+   ADD TO CART (FINAL FIXED VERSION)
 ========================= */
 exports.addToCart = async (req, res) => {
   try {
     const { productId, qty } = req.body;
+    const size = Number(req.body.size); // 🔥 Force number
+
+    if (!size) {
+      return res.status(400).json({ message: "Size is required" });
+    }
 
     let cart = await Cart.findOne({ user: req.user._id });
+
     if (!cart) {
       cart = await Cart.create({
         user: req.user._id,
@@ -38,8 +44,11 @@ exports.addToCart = async (req, res) => {
       });
     }
 
+    // 🔥 Compare product + size
     const itemIndex = cart.items.findIndex(
-      (i) => i.product.toString() === productId
+      (i) =>
+        i.product.toString() === productId &&
+        i.size === size
     );
 
     if (itemIndex > -1) {
@@ -48,6 +57,7 @@ exports.addToCart = async (req, res) => {
       cart.items.push({
         product: productId,
         qty: qty || 1,
+        size: size,
       });
     }
 
@@ -61,21 +71,28 @@ exports.addToCart = async (req, res) => {
 };
 
 /* =========================
-   REMOVE FROM CART (RECYCLE BIN)
-   - default: qty--
-   - removeAll: true -> move full item to recycle bin
+   REMOVE FROM CART (SIZE SAFE)
 ========================= */
 exports.removeFromCart = async (req, res) => {
   try {
     const { productId, removeAll } = req.body;
+    const size = Number(req.body.size);
 
     let cart = await Cart.findOne({ user: req.user._id });
     if (!cart)
       return res.status(404).json({ message: "Cart not found" });
 
-    const index = cart.items.findIndex(
-      (i) => i.product.toString() === productId
-    );
+    const index = cart.items.findIndex((i) => {
+      if (i.product.toString() !== productId) return false;
+
+      // 🔥 If size exists → match size
+      if (i.size !== undefined) {
+        return i.size === size;
+      }
+
+      // 🔥 Old items without size
+      return true;
+    });
 
     if (index === -1) {
       cart = await cart.populate(["items.product", "removedItems.product"]);
@@ -84,10 +101,10 @@ exports.removeFromCart = async (req, res) => {
 
     const item = cart.items[index];
 
-    // ♻️ MOVE TO RECYCLE BIN
     cart.removedItems.push({
       product: item.product,
       qty: removeAll ? item.qty : 1,
+      size: item.size,
     });
 
     if (removeAll || item.qty === 1) {
@@ -105,19 +122,23 @@ exports.removeFromCart = async (req, res) => {
   }
 };
 
+
 /* =========================
-   RESTORE FROM RECYCLE BIN (UNDO)
+   RESTORE FROM RECYCLE BIN
 ========================= */
 exports.restoreFromRecycleBin = async (req, res) => {
   try {
     const { productId } = req.body;
+    const size = Number(req.body.size);
 
     let cart = await Cart.findOne({ user: req.user._id });
     if (!cart)
       return res.status(404).json({ message: "Cart not found" });
 
     const index = cart.removedItems.findIndex(
-      (i) => i.product.toString() === productId
+      (i) =>
+        i.product.toString() === productId &&
+        i.size === size
     );
 
     if (index === -1) {
@@ -128,7 +149,9 @@ exports.restoreFromRecycleBin = async (req, res) => {
     const removedItem = cart.removedItems[index];
 
     const activeIndex = cart.items.findIndex(
-      (i) => i.product.toString() === productId
+      (i) =>
+        i.product.toString() === productId &&
+        i.size === size
     );
 
     if (activeIndex > -1) {
@@ -137,6 +160,7 @@ exports.restoreFromRecycleBin = async (req, res) => {
       cart.items.push({
         product: removedItem.product,
         qty: removedItem.qty,
+        size: removedItem.size,
       });
     }
 

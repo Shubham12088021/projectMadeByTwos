@@ -1,0 +1,39 @@
+.grid-toggle-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+.grid-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: #444;
+  transition: all 0.3s ease;
+}
+
+.grid-icon:hover {
+  border-color: #111;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  color: #111;
+}
+
+.grid-icon.active {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.grid-icon:active {
+  transform: scale(0.92);
+}

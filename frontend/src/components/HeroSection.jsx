@@ -1,11 +1,14 @@
 import HeroVideo from "../assets/herosectionvideo.mp4";
 import "./HeroSection.css";
 import { useNavigate } from "react-router-dom";
+import MovingStrip from "./MovingStrip";
+
 
 function HeroSection() {
   const navigate = useNavigate();
 
   return (
+    <>
     <section className="hero">
       {/* Background Video */}
       <video className="hero-video" autoPlay loop muted playsInline>
@@ -40,6 +43,8 @@ function HeroSection() {
         </div>
       </div>
     </section>
+    <MovingStrip />
+    </>
   );
 }
 

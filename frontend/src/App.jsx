@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 /* COMPONENTS */
 import Navbar from "./components/Navbar";
@@ -16,14 +16,19 @@ import Cart from "./pages/Cart";
 import BrandStory from "./components/BrandStory";
 import SpottedSection from "./components/SpottedSection";
 import Contact from "./components/Contact";
+import AboutUs from "./components/AboutUs";
+import TopAnnouncement from "./components/TopAnnouncement";  // ✅ ADDED
 
 /* 🔔 TOASTIFY */
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+
+
   return (
     <>
+      <TopAnnouncement />
       <Navbar />
 
       <Routes>
@@ -42,7 +47,8 @@ function App() {
 
         <Route path="/men" element={<Mens />} />
         <Route path="/women" element={<Womens />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/contact" element={<Contact />} />        
+        <Route path="/aboutus" element={<AboutUs />} />        
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -51,7 +57,6 @@ function App() {
 
       <Footer />
 
-      {/* 🔔 Toast Container (ADD ONLY ONCE) */}
       <ToastContainer
         position="top-right"
         autoClose={2000}
@@ -61,10 +66,8 @@ function App() {
         pauseOnHover
         draggable={false}
         theme="dark"
-        transition={Slide}          // ✅ upar se slide
-        // style={{ marginTop: "80px" }} // ✅ navbar ke niche
+        transition={Slide}
       />
-
     </>
   );
 }

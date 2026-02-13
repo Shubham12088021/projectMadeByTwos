@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 
+/* =========================
+   ACTIVE CART ITEM
+========================= */
 const cartItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
@@ -10,10 +13,16 @@ const cartItemSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 1
+  },
+  size: {               // 🔥 ADD THIS
+    type: Number,
+    required: true
   }
 });
 
-// ♻️ Recycle bin item schema
+/* =========================
+   RECYCLE BIN ITEM
+========================= */
 const removedItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
@@ -21,6 +30,10 @@ const removedItemSchema = new mongoose.Schema({
     required: true
   },
   qty: {
+    type: Number,
+    required: true
+  },
+  size: {               // 🔥 ADD THIS
     type: Number,
     required: true
   },
@@ -39,7 +52,7 @@ const cartSchema = new mongoose.Schema(
       unique: true
     },
     items: [cartItemSchema],
-    removedItems: [removedItemSchema] // ♻️ recycle bin
+    removedItems: [removedItemSchema]
   },
   { timestamps: true }
 );

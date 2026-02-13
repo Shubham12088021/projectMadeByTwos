@@ -1,20 +1,13 @@
 import "./newArrivals.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa";
-import axios from "axios";
-import { useCart } from "../context/CartContext";
 
 function NewArrivals() {
   const [activeTab, setActiveTab] = useState("men");
   const [products, setProducts] = useState([]);
-  const [loadingId, setLoadingId] = useState(null);
-
   const navigate = useNavigate();
-  const { setCartCount } = useCart();
-  const token = localStorage.getItem("token");
 
-  // 🔁 fetch products
+  /* 🔁 Fetch Products */
   useEffect(() => {
     fetch(`http://localhost:5000/api/products?category=${activeTab}`)
       .then(res => res.json())
@@ -22,39 +15,17 @@ function NewArrivals() {
       .catch(err => console.error(err));
   }, [activeTab]);
 
-  // 🛒 ADD TO CART
-  const addToCart = async (productId) => {
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    try {
-      setLoadingId(productId);
-      const { data } = await axios.post(
-        "http://localhost:5000/api/cart/add",
-        { productId, qty: 1 },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      // ✅ update navbar badge (unique items)
-      setCartCount(data.items.length);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingId(null);
-    }
-  };
-
   const handleViewAll = () => {
     navigate(`/${activeTab}`);
   };
 
   return (
-    <div className="container my-5">
-      <h2 className="text-center fw-semibold mb-4">New Arrivals</h2>
+    <div className="container my-5 new-arrivals-section">
+      <h2 className="text-center fw-semibold mb-4">
+        New Arrivals
+      </h2>
 
-      {/* TABS */}
+      {/* 🔹 Tabs */}
       <div className="d-flex justify-content-center gap-4 mb-4 arrivals-tabs">
         <span
           className={activeTab === "men" ? "active" : ""}
@@ -62,6 +33,7 @@ function NewArrivals() {
         >
           Men's Collection
         </span>
+
         <span
           className={activeTab === "women" ? "active" : ""}
           onClick={() => setActiveTab("women")}
@@ -70,43 +42,75 @@ function NewArrivals() {
         </span>
       </div>
 
-      {/* PRODUCTS */}
+      {/* 🔹 Products */}
       <div className="row g-4">
-        {products.slice(0, 5).map(item => (
-          <div className="col-md-4" key={item._id}>
-            <div className="product-card">
-              <span className="badge-new">NEW ARRIVAL</span>
+        {products.slice(0, 6).map(item => {
+          const discountPercent = 20;
+          const oldPrice = item.price;
+          const newPrice = Math.round(
+            oldPrice * (1 - discountPercent / 100)
+          );
 
-              <img src={item.image} alt={item.name} />
-
-              <h6 className="product-name">{item.name}</h6>
-
-              {/* ⭐ RATING */}
-              <div className="rating">
-                {"★".repeat(Math.round(item.rating))}
-                {"☆".repeat(5 - Math.round(item.rating))}
-                <span className="review-count">({item.numReviews})</span>
-              </div>
-
-              <p className="price">₹{item.price}</p>
-
-              {/* 🛒 ADD TO CART ICON */}
-              <button
-                className="add-cart-btn"
-                disabled={loadingId === item._id}
-                onClick={() => addToCart(item._id)}
+          return (
+            <div className="col-md-4" key={item._id}>
+              <div
+                className="product-card"
+                onClick={() => navigate(`/product/${item._id}`)}
               >
-                <FaShoppingCart />
-                {loadingId === item._id ? "Adding..." : "Add to Cart"}
-              </button>
+                <span className="badge-new">
+                  NEW ARRIVAL
+                </span>
+
+                <div className="img-wrapper">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="product-img"
+                  />
+                </div>
+
+                <div className="product-info">
+                  <h6 className="product-name">
+                    {item.name}
+                  </h6>
+
+                  <div className="rating">
+                    {"★".repeat(Math.round(item.rating || 4))}
+                    {"☆".repeat(5 - Math.round(item.rating || 4))}
+                    <span className="review-count">
+                      ({item.numReviews || 0})
+                    </span>
+                  </div>
+
+                  {/* 🔥 Discount Pricing */}
+                  <div className="price-box">
+                    <div className="price-row">
+                      <span className="old-price">
+                        ₹{oldPrice}
+                      </span>
+                      <span className="new-price">
+                        ₹{newPrice}
+                      </span>
+                    </div>
+
+                    <div className="discount-box">
+                      {discountPercent}% OFF
+                    </div>
+                  </div>
+
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* VIEW ALL */}
-      <div className="text-center mt-4">
-        <button className="btn btn-dark px-4" onClick={handleViewAll}>
+      {/* 🔹 View All Button */}
+      <div className="text-center mt-5">
+        <button
+          className="btn btn-dark px-4 view-all-btn"
+          onClick={handleViewAll}
+        >
           VIEW ALL
         </button>
       </div>

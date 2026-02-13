@@ -1,0 +1,37 @@
+.moving-strip {
+  position: relative;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  overflow: hidden;
+  padding: 7px 0;
+}
+
+.moving-track {
+  display: flex;
+  width: max-content;
+  animation: scroll 18s linear infinite; /* 🔥 speed thoda fast */
+}
+
+.moving-content {
+  white-space: nowrap;
+  font-size: 11px;
+  letter-spacing: 3px;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding-right: 60px;
+}
+
+/* hover pause */
+.moving-strip:hover .moving-track {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

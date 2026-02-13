@@ -1,0 +1,181 @@
+/* =====================================
+   MAIN LAYOUT WRAPPER
+===================================== */
+.layout-wrapper {
+  padding: 40px 60px;
+}
+
+/* =====================================
+   CONTENT AREA
+===================================== */
+.content {
+  width: 100%;
+}
+
+/* =====================================
+   TOP BAR (Sort + Grid Toggle)
+===================================== */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+/* =====================================
+   SORT DROPDOWN
+===================================== */
+.sort-dropdown {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 220px;
+}
+
+.sort-dropdown:hover {
+  border-color: #111;
+}
+
+.sort-dropdown:focus {
+  outline: none;
+  border-color: #111;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* =====================================
+   GRID TOGGLE WRAPPER
+===================================== */
+.grid-toggle-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+/* =====================================
+   GRID ICON BUTTON
+===================================== */
+.grid-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  color: #444;
+  transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.grid-icon:hover {
+  border-color: #111;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  color: #111;
+}
+
+/* Click Effect */
+.grid-icon:active {
+  transform: scale(0.92);
+}
+
+/* Active State */
+.grid-icon.active {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* =====================================
+   PRODUCT GRID SECTION
+===================================== */
+.row.g-4 {
+  margin-top: 10px;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+
+/* Tablet */
+@media (max-width: 992px) {
+  .layout-wrapper {
+    padding: 30px;
+  }
+
+  .sort-dropdown {
+    min-width: 180px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .layout-wrapper {
+    padding: 20px;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .grid-toggle-wrapper {
+    align-self: flex-end;
+  }
+}
+
+
+/* ===============================
+   PAGINATION
+================================= */
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 50px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  min-width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.pagination-btn:hover:not(:disabled) {
+  border-color: #111;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Disabled */
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ACTIVE PAGE */
+.active-page {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}

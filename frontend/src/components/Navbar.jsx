@@ -51,6 +51,11 @@ const Navbar = () => {
                   Contact
                 </NavLink>
               </li>
+              <li className="nav-item">
+                <NavLink className="nav-link premium-link" to="/aboutus">
+                  About Us
+                </NavLink>
+              </li>
             </ul>
           </div>
 

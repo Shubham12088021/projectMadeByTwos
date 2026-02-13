@@ -1,0 +1,53 @@
+/* ===============================
+   TRUST SECTION
+================================= */
+
+.trust-section {
+  width: 100vw;
+  margin-top: 80px;
+  padding: 80px 20px;
+  background: #f4f4f4;
+  text-align: center;
+
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.trust-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.trust-heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.trust-star {
+  color: #f4b400;
+  font-size: 28px;
+}
+
+.trust-heading h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.trust-subtext {
+  font-size: 16px;
+  color: #555;
+  margin-top: 8px;
+}
+
+/* Hover subtle animation */
+.trust-heading:hover .trust-star {
+  transform: scale(1.15);
+  transition: 0.3s ease;
+}

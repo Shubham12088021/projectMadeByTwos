@@ -13,7 +13,6 @@ const Cart = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  // 🔥 IMPORTANT
   const { syncCart, increaseCart, decreaseCart } = useCart();
 
   /* ===== FETCH CART ===== */
@@ -40,23 +39,21 @@ const Cart = () => {
   }, [token]);
 
   /* ===== INCREASE QTY ===== */
-  const increaseQty = async (id) => {
+  const increaseQty = async (id, size) => {
     try {
-      setBtnLoading(id + "+");
+      setBtnLoading(id + size + "+");
 
-      // 🔥 OPTIMISTIC BADGE
       increaseCart(1);
 
       const { data } = await axios.post(
         "http://localhost:5000/api/cart/add",
-        { productId: id, qty: 1 },
+        { productId: id, qty: 1, size },   // 🔥 size added
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setCart(data);
       syncCart();
     } catch {
-      // fallback
       syncCart();
     } finally {
       setBtnLoading(null);
@@ -64,16 +61,15 @@ const Cart = () => {
   };
 
   /* ===== DECREASE QTY ===== */
-  const decreaseQty = async (id) => {
+  const decreaseQty = async (id, size) => {
     try {
-      setBtnLoading(id + "-");
+      setBtnLoading(id + size + "-");
 
-      // 🔥 OPTIMISTIC BADGE
       decreaseCart(1);
 
       const { data } = await axios.post(
         "http://localhost:5000/api/cart/remove",
-        { productId: id },
+        { productId: id, size },  // 🔥 size added
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -87,16 +83,15 @@ const Cart = () => {
   };
 
   /* ===== REMOVE ITEM ===== */
-  const removeItem = async (id, qty) => {
+  const removeItem = async (id, size, qty) => {
     try {
-      setBtnLoading(id + "x");
+      setBtnLoading(id + size + "x");
 
-      // 🔥 OPTIMISTIC BADGE
       decreaseCart(qty);
 
       const { data } = await axios.post(
         "http://localhost:5000/api/cart/remove",
-        { productId: id, removeAll: true },
+        { productId: id, removeAll: true, size }, // 🔥 size added
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -109,7 +104,6 @@ const Cart = () => {
     }
   };
 
-  /* ===== LOADER ===== */
   if (loading) {
     return (
       <div className="loader-screen">
@@ -119,7 +113,6 @@ const Cart = () => {
     );
   }
 
-  /* ===== EMPTY CART ===== */
   if (!cart || cart.items.length === 0) {
     return (
       <div className="empty-cart-section">
@@ -149,17 +142,25 @@ const Cart = () => {
         <h1 className="cart-title">Your Shopping Cart</h1>
 
         {cart.items.map((item) => (
-          <div className="cart-card" key={item.product._id}>
+          <div
+            className="cart-card"
+            key={item.product._id + "-" + item.size}   // 🔥 unique key
+          >
             <img src={item.product.image} alt={item.product.name} />
 
             <div className="cart-info">
               <h3>{item.product.name}</h3>
               <p>₹{item.product.price}</p>
 
+              {/* 🔥 SHOW SIZE */}
+              <p className="cart-size">Size: {item.size}</p>
+
               <div className="qty-box">
                 <button
-                  disabled={btnLoading === item.product._id + "-"}
-                  onClick={() => decreaseQty(item.product._id)}
+                  disabled={btnLoading === item.product._id + item.size + "-"}
+                  onClick={() =>
+                    decreaseQty(item.product._id, item.size)
+                  }
                 >
                   −
                 </button>
@@ -167,8 +168,10 @@ const Cart = () => {
                 <span>{item.qty}</span>
 
                 <button
-                  disabled={btnLoading === item.product._id + "+"}
-                  onClick={() => increaseQty(item.product._id)}
+                  disabled={btnLoading === item.product._id + item.size + "+"}
+                  onClick={() =>
+                    increaseQty(item.product._id, item.size)
+                  }
                 >
                   +
                 </button>
@@ -176,20 +179,28 @@ const Cart = () => {
             </div>
 
             <div className="cart-price">
-  <span className="item-total">
-    ₹{item.product.price * item.qty}
-  </span>
+              <span className="item-total">
+                ₹{item.product.price * item.qty}
+              </span>
 
-  <button
-    className="remove-btn icon-btn"
-    disabled={btnLoading === item.product._id + "x"}
-    onClick={() => removeItem(item.product._id, item.qty)}
-    title="Remove item"
-  >
-    <FaTrashAlt />
-  </button>
-</div>
-
+              <button
+                className="remove-btn icon-btn"
+                disabled={
+                  btnLoading ===
+                  item.product._id + item.size + "x"
+                }
+                onClick={() =>
+                  removeItem(
+                    item.product._id,
+                    item.size,
+                    item.qty
+                  )
+                }
+                title="Remove item"
+              >
+                <FaTrashAlt />
+              </button>
+            </div>
           </div>
         ))}
       </div>

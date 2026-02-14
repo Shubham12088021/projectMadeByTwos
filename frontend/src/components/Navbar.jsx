@@ -1,6 +1,6 @@
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
-import "./navbar.css";
+import "./Navbar.css";
 import { useCart } from "../context/CartContext";
 
 const Navbar = () => {

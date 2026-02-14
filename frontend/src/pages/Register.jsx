@@ -1,20 +1,30 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useCart } from "../context/CartContext"; // ✅ ADD
+import { toast } from "react-toastify";
 import "./auth.css";
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [confirmPassword, setConfirmPassword] = useState(""); // 🔥 NEW
+  const [loading, setLoading] = useState(false);
 
-  const { syncCart } = useCart(); // ✅ ADD
+  const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (loading) return;
+
+    // 🔥 Password match check
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
 
     try {
+      setLoading(true);
+
       const res = await fetch("http://localhost:5000/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -24,19 +34,19 @@ function Register() {
       const data = await res.json();
 
       if (res.ok) {
-        // ✅ AUTO LOGIN AFTER REGISTER
-        localStorage.setItem("token", data.token);
+        toast.success("Registered successfully! Please verify your email.");
 
-        // 🔥 SYNC CART (will be 0 for new user, but important)
-        await syncCart();
+        setTimeout(() => {
+          navigate("/verify-email", { state: { email } });
+        }, 1500);
 
-        // ✅ GO HOME
-        navigate("/");
       } else {
-        alert(data.message || "Registration failed");
+        toast.error(data.message || "Registration failed");
       }
     } catch (error) {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,6 +66,7 @@ function Register() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
@@ -67,6 +78,7 @@ function Register() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
@@ -78,11 +90,25 @@ function Register() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
-          <button className="login-btn">
-            Create account
+          {/* 🔥 Confirm Password Field */}
+          <div className="field">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+
+          <button className="login-btn" disabled={loading}>
+            {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
 

@@ -2,12 +2,15 @@
    PAGE
 ================================ */
 .auth-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 120px); /* adjust based on navbar height */
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f6f6f6; /* clean neutral */
+  padding: 40px 20px;
+  background: #f6f6f6;
 }
+
+
 
 /* ===============================
    CARD

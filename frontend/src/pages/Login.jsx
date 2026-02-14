@@ -1,19 +1,24 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useCart } from "../context/CartContext"; // ✅ ADD
+import { useCart } from "../context/CartContext";
+import { toast } from "react-toastify";
 import "./auth.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const { syncCart } = useCart(); // ✅ ADD
+  const navigate = useNavigate();
+  const { syncCart } = useCart();
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (loading) return;
 
     try {
+      setLoading(true);
+
       const res = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -23,19 +28,23 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        // ✅ save token
         localStorage.setItem("token", data.token);
 
-        // 🔥 MOST IMPORTANT LINE
-        await syncCart();   // 👈 login ke turant baad cart sync
+        await syncCart();
 
-        // ✅ redirect
-        navigate("/");
+        toast.success("Login successful!");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+
       } else {
-        alert(data.message || "Login failed");
+        toast.error(data.message || "Login failed");
       }
     } catch (error) {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,6 +65,7 @@ function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
@@ -67,10 +77,26 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
-          <button className="login-btn">Sign in</button>
+          {/* 🔥 Forgot Password Link */}
+          <p
+            style={{
+              textAlign: "right",
+              fontSize: "13px",
+              marginBottom: "15px"
+            }}
+          >
+            <Link to="/forgot-password" style={{ textDecoration: "none" }}>
+              Forgot Password?
+            </Link>
+          </p>
+
+          <button className="login-btn" disabled={loading}>
+            {loading ? "Signing in..." : "Sign in"}
+          </button>
         </form>
 
         <p className="switch-auth">

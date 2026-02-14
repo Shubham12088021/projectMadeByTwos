@@ -17,7 +17,12 @@ import BrandStory from "./components/BrandStory";
 import SpottedSection from "./components/SpottedSection";
 import Contact from "./components/Contact";
 import AboutUs from "./components/AboutUs";
-import TopAnnouncement from "./components/TopAnnouncement";  // ✅ ADDED
+import TopAnnouncement from "./components/TopAnnouncement"; 
+import VerifyEmail from "./pages/VerifyEmail";
+import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
+
+
 
 /* 🔔 TOASTIFY */
 import { ToastContainer, Slide } from "react-toastify";
@@ -51,7 +56,10 @@ function App() {
         <Route path="/aboutus" element={<AboutUs />} />        
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/cart" element={<Cart />} />
       </Routes>
 

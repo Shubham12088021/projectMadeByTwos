@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./productDetail.css";
+import "./ProductDetail.css";
 import { toast } from "react-toastify";
 import CartToast from "./CartToast";
 import { useCart } from "../context/CartContext";

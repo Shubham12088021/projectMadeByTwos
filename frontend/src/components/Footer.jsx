@@ -6,7 +6,7 @@ import {
   FaInstagram,
   FaBriefcase
 } from "react-icons/fa";
-import "./footer.css";
+import "./Footer.css";
 
 function Footer() {
   return (

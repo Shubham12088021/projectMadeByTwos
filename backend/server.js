@@ -10,10 +10,14 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://projectmadebytwos-frontend.onrender.com"
+    ],
     credentials: true
   })
 );
+
 
 app.use(express.json());
 

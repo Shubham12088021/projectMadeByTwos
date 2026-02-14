@@ -5,84 +5,85 @@ import { toast } from "react-toastify";
 import "./auth.css";
 
 function ResetPassword() {
-  const { token } = useParams();
-  const navigate = useNavigate();
+    const { token } = useParams();
+    const navigate = useNavigate();
 
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // 🔥 NEW
-  const [loading, setLoading] = useState(false);
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState(""); // 🔥 NEW
+    const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (loading) return;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (loading) return;
 
-    // 🔥 Confirm password check
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
+        // 🔥 Confirm password check
+        if (password !== confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
+        }
 
-    try {
-      setLoading(true);
+        try {
+            setLoading(true);
 
-      await axios.post(
-        `http://localhost:5000/api/users/reset-password/${token}`,
-        { password }
-      );
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/users/reset-password/${token}`,
+                { password }
+            );
 
-      toast.success("Password reset successful!");
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
+            toast.success("Password reset successful!");
 
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Reset failed"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+            setTimeout(() => {
+                navigate("/login");
+            }, 1500);
 
-  return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h2 className="title">Reset Password</h2>
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message || "Reset failed"
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        <form onSubmit={handleSubmit}>
-          <div className="field">
-            <label>New Password</label>
-            <input
-              type="password"
-              placeholder="Enter new password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </div>
+    return (
+        <div className="auth-page">
+            <div className="auth-card">
+                <h2 className="title">Reset Password</h2>
 
-          {/* 🔥 Confirm Password Field */}
-          <div className="field">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              placeholder="Confirm new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="field">
+                        <label>New Password</label>
+                        <input
+                            type="password"
+                            placeholder="Enter new password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            disabled={loading}
+                        />
+                    </div>
 
-          <button className="login-btn" disabled={loading}>
-            {loading ? "Updating..." : "Reset Password"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+                    {/* 🔥 Confirm Password Field */}
+                    <div className="field">
+                        <label>Confirm Password</label>
+                        <input
+                            type="password"
+                            placeholder="Confirm new password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                            disabled={loading}
+                        />
+                    </div>
+
+                    <button className="login-btn" disabled={loading}>
+                        {loading ? "Updating..." : "Reset Password"}
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
 }
 
 export default ResetPassword;

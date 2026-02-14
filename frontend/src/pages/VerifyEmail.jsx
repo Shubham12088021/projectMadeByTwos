@@ -65,18 +65,18 @@ function VerifyEmail() {
     try {
       setLoading(true);
 
-      await axios.post("http://localhost:5000/api/users/verify-email", {
-        email,
-        otp: finalOtp,
-      });
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/users/verify-email`,
+        {
+          email,
+          otp: finalOtp,
+        },
+      );
 
       toast.success("Email verified successfully!");
       navigate("/login");
-
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Verification failed"
-      );
+      toast.error(error.response?.data?.message || "Verification failed");
     } finally {
       setLoading(false);
     }
@@ -90,7 +90,7 @@ function VerifyEmail() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/users/resend-otp", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/users/resend-otp`, {
         email,
       });
 
@@ -98,14 +98,10 @@ function VerifyEmail() {
 
       setTimer(30);
       setCanResend(false);
-
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to resend OTP"
-      );
+      toast.error(error.response?.data?.message || "Failed to resend OTP");
     }
   };
-
 
   return (
     <div className="auth-page">
@@ -126,7 +122,9 @@ function VerifyEmail() {
           <div className="field">
             <label>Enter OTP</label>
 
-            <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+            <div
+              style={{ display: "flex", gap: "10px", justifyContent: "center" }}
+            >
               {otp.map((digit, index) => (
                 <input
                   key={index}
@@ -142,7 +140,7 @@ function VerifyEmail() {
                     fontSize: "20px",
                     textAlign: "center",
                     borderRadius: "6px",
-                    border: "1px solid #ccc"
+                    border: "1px solid #ccc",
                   }}
                 />
               ))}
@@ -160,15 +158,12 @@ function VerifyEmail() {
               textAlign: "center",
               color: canResend ? "#111" : "#999",
               cursor: canResend ? "pointer" : "not-allowed",
-              transition: "0.3s"
+              transition: "0.3s",
             }}
             onClick={handleResend}
           >
-            {canResend
-              ? "Resend OTP"
-              : `Resend OTP in ${timer}s`}
+            {canResend ? "Resend OTP" : `Resend OTP in ${timer}s`}
           </p>
-
         </form>
       </div>
     </div>

@@ -17,12 +17,13 @@ import BrandStory from "./components/BrandStory";
 import SpottedSection from "./components/SpottedSection";
 import Contact from "./components/Contact";
 import AboutUs from "./components/AboutUs";
-import TopAnnouncement from "./components/TopAnnouncement"; 
+import TopAnnouncement from "./components/TopAnnouncement";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 
-
+import Success from "./pages/Success";
+import Cancel from "./pages/Cancel";
 
 /* 🔔 TOASTIFY */
 import { ToastContainer, Slide } from "react-toastify";
@@ -52,8 +53,8 @@ function App() {
 
         <Route path="/men" element={<Mens />} />
         <Route path="/women" element={<Womens />} />
-        <Route path="/contact" element={<Contact />} />        
-        <Route path="/aboutus" element={<AboutUs />} />        
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
@@ -61,6 +62,8 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
       </Routes>
 
       <Footer />

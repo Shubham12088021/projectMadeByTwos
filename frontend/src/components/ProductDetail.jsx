@@ -5,6 +5,8 @@ import "./ProductDetail.css";
 import { toast } from "react-toastify";
 import CartToast from "./CartToast";
 import { useCart } from "../context/CartContext";
+import { stripePromise } from "../stripe";
+
 
 function ProductDetail() {
   const { id } = useParams();
@@ -19,9 +21,31 @@ function ProductDetail() {
   const { syncCart, increaseCart } = useCart();
 
   /* BUY NOW */
-  const buyNowHandler = () => {
-    toast.info("Buy Now coming soon 🚀", { autoClose: 1500 });
-  };
+  const buyNowHandler = async () => {
+  try {
+    const stripe = await stripePromise;
+
+    const singleItem = [
+      {
+        name: product.name,
+        price: newPrice,   // use discounted price
+        quantity: qty,
+      },
+    ];
+
+    const response = await axios.post(
+      "http://localhost:5000/api/payment/create-checkout-session",
+      { cartItems: singleItem }
+    );
+
+    window.location.href = response.data.url;
+
+  } catch (error) {
+    console.error("Buy Now Error:", error);
+    toast.error("Something went wrong");
+  }
+};
+
 
   /* FETCH PRODUCT */
   useEffect(() => {

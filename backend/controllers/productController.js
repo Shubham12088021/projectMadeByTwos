@@ -4,21 +4,41 @@ const Product = require("../models/Product");
    GET ALL PRODUCTS
    (optionally by category)
 ========================= */
+/* =========================
+   GET PRODUCTS
+   (category + pagination + sorting)
+========================= */
 exports.getProducts = async (req, res) => {
   try {
-    const { category } = req.query;
+    const { category, page = 1, limit = 10 } = req.query;
 
     let filter = {};
     if (category) {
-      filter.category = category; // men / women / kids
+      filter.category = category;
     }
 
-    const products = await Product.find(filter);
-    res.json(products);
+    const pageNumber = Number(page);
+    const pageSize = Number(limit);
+
+    const totalProducts = await Product.countDocuments(filter);
+
+    const products = await Product.find(filter)
+      .sort({ createdAt: -1 }) // latest first
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
+
+    res.json({
+      products,
+      currentPage: pageNumber,
+      totalPages: Math.ceil(totalProducts / pageSize),
+      totalProducts,
+    });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 /* =========================
    GET PRODUCT BY ID

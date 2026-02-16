@@ -4,58 +4,64 @@ import ProductCard from "./ProductCard";
 import "./ProductLayout.css";
 import TrustSection from "./TrustSection";
 
-
 const ProductLayout = ({ category }) => {
     const [products, setProducts] = useState([]);
     const [columns, setColumns] = useState(4);
     const [sortOption, setSortOption] = useState("featured");
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
-    const itemsPerPage = 16; // 🔥 changed to 16
-
+    /* =========================
+       FETCH PRODUCTS (MongoDB Pagination)
+    ========================= */
     useEffect(() => {
-        fetch(`http://localhost:5000/api/products?category=${category}`)
+        fetch(
+            `http://localhost:5000/api/products?category=${category}&page=${currentPage}&limit=16`
+        )
             .then((res) => res.json())
             .then((data) => {
-                setProducts(data);
-                setCurrentPage(1);
-            })
-            .catch((err) => console.error(err));
-    }, [category]);
+                const safeProducts = Array.isArray(data.products)
+                    ? data.products
+                    : [];
 
-    /* SORTING */
+                setProducts(safeProducts);
+                setTotalPages(data.totalPages || 1);
+            })
+            .catch((err) => {
+                console.error(err);
+                setProducts([]);
+            });
+    }, [category, currentPage]);
+
+    /* =========================
+       SORTING (Frontend Only)
+    ========================= */
     const sortedProducts = [...products].sort((a, b) => {
         switch (sortOption) {
             case "az":
-                return a.name.localeCompare(b.name);
+                return (a?.name || "").localeCompare(b?.name || "");
             case "za":
-                return b.name.localeCompare(a.name);
+                return (b?.name || "").localeCompare(a?.name || "");
             case "low":
-                return a.price - b.price;
+                return (a?.price || 0) - (b?.price || 0);
             case "high":
-                return b.price - a.price;
+                return (b?.price || 0) - (a?.price || 0);
             default:
                 return 0;
         }
     });
 
-    /* PAGINATION */
-    const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
-    const currentProducts = sortedProducts.slice(
-        indexOfFirstItem,
-        indexOfLastItem
-    );
-
+    /* =========================
+       PAGE CHANGE
+    ========================= */
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    /* GRID */
+    /* =========================
+       GRID CLASS
+    ========================= */
     const getColClass = () => {
         switch (columns) {
             case 2:
@@ -79,7 +85,6 @@ const ProductLayout = ({ category }) => {
                         value={sortOption}
                         onChange={(e) => {
                             setSortOption(e.target.value);
-                            setCurrentPage(1);
                         }}
                     >
                         <option value="featured">Featured</option>
@@ -115,8 +120,14 @@ const ProductLayout = ({ category }) => {
 
                 {/* PRODUCTS */}
                 <div className="row g-4">
-                    {currentProducts.map((product) => (
-                        <div className={getColClass()} key={product._id}>
+                    {sortedProducts.length === 0 && (
+                        <div className="text-center">
+                            No products found
+                        </div>
+                    )}
+
+                    {sortedProducts.map((product, index) => (
+                        <div className={getColClass()} key={product?._id || index}>
                             <ProductCard product={product} />
                         </div>
                     ))}
@@ -137,8 +148,9 @@ const ProductLayout = ({ category }) => {
                         {Array.from({ length: totalPages }, (_, index) => (
                             <button
                                 key={index}
-                                className={`pagination-btn ${currentPage === index + 1 ? "active-page" : ""
-                                    }`}
+                                className={`pagination-btn ${
+                                    currentPage === index + 1 ? "active-page" : ""
+                                }`}
                                 onClick={() => handlePageChange(index + 1)}
                             >
                                 {index + 1}
@@ -155,10 +167,8 @@ const ProductLayout = ({ category }) => {
 
                     </div>
                 )}
-
-
-
             </div>
+
             <TrustSection />
         </>
     );

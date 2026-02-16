@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./Cart.css";
 import { useCart } from "../context/CartContext";
 import { FaTrashAlt } from "react-icons/fa";
+import { stripePromise } from "../stripe"; // 🔥 STRIPE ADDED
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
@@ -19,12 +20,9 @@ const Cart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:5000/api/cart",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const { data } = await axios.get("http://localhost:5000/api/cart", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         setCart(data);
         syncCart();
@@ -47,8 +45,8 @@ const Cart = () => {
 
       const { data } = await axios.post(
         "http://localhost:5000/api/cart/add",
-        { productId: id, qty: 1, size },   // 🔥 size added
-        { headers: { Authorization: `Bearer ${token}` } }
+        { productId: id, qty: 1, size }, // 🔥 size added
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setCart(data);
@@ -69,8 +67,8 @@ const Cart = () => {
 
       const { data } = await axios.post(
         "http://localhost:5000/api/cart/remove",
-        { productId: id, size },  // 🔥 size added
-        { headers: { Authorization: `Bearer ${token}` } }
+        { productId: id, size }, // 🔥 size added
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setCart(data);
@@ -92,7 +90,7 @@ const Cart = () => {
       const { data } = await axios.post(
         "http://localhost:5000/api/cart/remove",
         { productId: id, removeAll: true, size }, // 🔥 size added
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setCart(data);
@@ -103,6 +101,28 @@ const Cart = () => {
       setBtnLoading(null);
     }
   };
+  /* ===== STRIPE CHECKOUT ===== */
+  const handleCheckout = async () => {
+  try {
+    const cartItems = cart.items.map((item) => ({
+      name: item.product.name,
+      price: item.product.price,
+      quantity: item.qty,
+    }));
+
+    const response = await axios.post(
+      "http://localhost:5000/api/payment/create-checkout-session",
+      { cartItems }
+    );
+
+    // 🔥 NEW WAY — redirect using session.url
+    window.location.href = response.data.url;
+
+  } catch (error) {
+    console.error("Checkout Error:", error);
+  }
+};
+
 
   if (loading) {
     return (
@@ -120,10 +140,7 @@ const Cart = () => {
           <h2>🛒 Your cart is empty</h2>
           <p>Looks like you haven’t added anything yet</p>
 
-          <button
-            className="continue-btn"
-            onClick={() => navigate("/")}
-          >
+          <button className="continue-btn" onClick={() => navigate("/")}>
             ← Continue Shopping
           </button>
         </div>
@@ -133,7 +150,7 @@ const Cart = () => {
 
   const subtotal = cart.items.reduce(
     (acc, item) => acc + item.product.price * item.qty,
-    0
+    0,
   );
 
   return (
@@ -144,7 +161,7 @@ const Cart = () => {
         {cart.items.map((item) => (
           <div
             className="cart-card"
-            key={item.product._id + "-" + item.size}   // 🔥 unique key
+            key={item.product._id + "-" + item.size} // 🔥 unique key
           >
             <img src={item.product.image} alt={item.product.name} />
 
@@ -158,9 +175,7 @@ const Cart = () => {
               <div className="qty-box">
                 <button
                   disabled={btnLoading === item.product._id + item.size + "-"}
-                  onClick={() =>
-                    decreaseQty(item.product._id, item.size)
-                  }
+                  onClick={() => decreaseQty(item.product._id, item.size)}
                 >
                   −
                 </button>
@@ -169,9 +184,7 @@ const Cart = () => {
 
                 <button
                   disabled={btnLoading === item.product._id + item.size + "+"}
-                  onClick={() =>
-                    increaseQty(item.product._id, item.size)
-                  }
+                  onClick={() => increaseQty(item.product._id, item.size)}
                 >
                   +
                 </button>
@@ -185,16 +198,9 @@ const Cart = () => {
 
               <button
                 className="remove-btn icon-btn"
-                disabled={
-                  btnLoading ===
-                  item.product._id + item.size + "x"
-                }
+                disabled={btnLoading === item.product._id + item.size + "x"}
                 onClick={() =>
-                  removeItem(
-                    item.product._id,
-                    item.size,
-                    item.qty
-                  )
+                  removeItem(item.product._id, item.size, item.qty)
                 }
                 title="Remove item"
               >
@@ -208,7 +214,9 @@ const Cart = () => {
       <div className="checkout-glass">
         <h3>Subtotal</h3>
         <h1>₹{subtotal}</h1>
-        <button className="buy-btn">🚀 Proceed to Buy</button>
+        <button className="buy-btn" onClick={handleCheckout}>
+          🚀 Proceed to Buy
+        </button>
       </div>
     </div>
   );

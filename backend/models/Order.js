@@ -7,6 +7,7 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true
     },
+
     items: [
       {
         product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
@@ -14,14 +15,31 @@ const orderSchema = new mongoose.Schema(
         price: Number
       }
     ],
+
     totalPrice: {
       type: Number,
       required: true
     },
+
     isPaid: {
       type: Boolean,
       default: false
+    },
+
+    // 🔥 STRIPE FIELDS ADDED
+    paidAt: {
+      type: Date
+    },
+
+    paymentMethod: {
+      type: String,
+      default: "Stripe"
+    },
+
+    stripeSessionId: {
+      type: String
     }
+
   },
   { timestamps: true }
 );

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { useCart } from "../context/CartContext"; // 🔥 ADD THIS
 
 const Success = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { syncCart } = useCart(); // 🔥 ADD THIS
 
   const [countdown, setCountdown] = useState(3);
   const [message, setMessage] = useState("Processing your order...");
@@ -29,6 +31,9 @@ const Success = () => {
             },
           }
         );
+
+        // 🔥 VERY IMPORTANT — REFRESH CART
+        await syncCart();
 
         setMessage("🎉 Payment Successful!");
 

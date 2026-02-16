@@ -5,8 +5,6 @@ import "./ProductDetail.css";
 import { toast } from "react-toastify";
 import CartToast from "./CartToast";
 import { useCart } from "../context/CartContext";
-import { stripePromise } from "../stripe";
-
 
 function ProductDetail() {
   const { id } = useParams();
@@ -17,35 +15,7 @@ function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // 🔥 IMPORTANT
   const { syncCart, increaseCart } = useCart();
-
-  /* BUY NOW */
-  const buyNowHandler = async () => {
-  try {
-    const stripe = await stripePromise;
-
-    const singleItem = [
-      {
-        name: product.name,
-        price: newPrice,   // use discounted price
-        quantity: qty,
-      },
-    ];
-
-    const response = await axios.post(
-      "http://localhost:5000/api/payment/create-checkout-session",
-      { cartItems: singleItem }
-    );
-
-    window.location.href = response.data.url;
-
-  } catch (error) {
-    console.error("Buy Now Error:", error);
-    toast.error("Something went wrong");
-  }
-};
-
 
   /* FETCH PRODUCT */
   useEffect(() => {
@@ -68,6 +38,7 @@ function ProductDetail() {
   /* ADD TO CART */
   const addToCartHandler = async () => {
     const token = localStorage.getItem("token");
+
     if (!token) {
       toast.warning("Please login to add items to cart");
       return;
@@ -90,10 +61,7 @@ function ProductDetail() {
         }
       );
 
-      // 🔥 INSTANT BADGE UPDATE
       increaseCart(qty);
-
-      // 🔒 BACKEND SYNC (FINAL TRUTH)
       syncCart();
 
       toast(
@@ -132,6 +100,33 @@ function ProductDetail() {
   const discountPercent = 20;
   const oldPrice = product.price;
   const newPrice = Math.round(oldPrice * (1 - discountPercent / 100));
+
+  /* BUY NOW */
+  const buyNowHandler = async () => {
+    try {
+      const singleItem = [
+  {
+    id: product._id,
+    name: product.name,
+    price: newPrice,
+    quantity: qty,
+    size: size,      // 🔥 ADD THIS
+  },
+];
+
+
+      const response = await axios.post(
+        "http://localhost:5000/api/payment/create-checkout-session",
+        { cartItems: singleItem }
+      );
+
+      window.location.href = response.data.url;
+
+    } catch (error) {
+      console.error("Buy Now Error:", error);
+      toast.error("Something went wrong");
+    }
+  };
 
   return (
     <div className="container product-detail">
@@ -174,15 +169,13 @@ function ProductDetail() {
           </div>
 
           <div className="price-section">
-  <div className="price-row">
-    <span className="price">₹{newPrice}</span>
-    <span className="old-price">₹{oldPrice}</span>
-    <span className="discount-inline">{discountPercent}% OFF</span>
-  </div>
-
-  <span className="tax">Inclusive of all taxes</span>
-</div>
-
+            <div className="price-row">
+              <span className="price">₹{newPrice}</span>
+              <span className="old-price">₹{oldPrice}</span>
+              <span className="discount-inline">{discountPercent}% OFF</span>
+            </div>
+            <span className="tax">Inclusive of all taxes</span>
+          </div>
 
           <p className="description">
             {product.description ||

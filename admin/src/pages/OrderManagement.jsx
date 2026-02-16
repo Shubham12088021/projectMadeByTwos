@@ -28,7 +28,6 @@ function OrderManagement() {
   useEffect(() => {
     fetchOrders();
 
-    // 🔥 Auto refresh every 10 seconds
     const interval = setInterval(() => {
       fetchOrders();
     }, 10000);
@@ -39,7 +38,6 @@ function OrderManagement() {
   return (
     <div style={{ padding: "40px" }}>
 
-      {/* 🔥 BACK BUTTON */}
       <button
         onClick={() => navigate("/dashboard")}
         style={{
@@ -92,7 +90,40 @@ function OrderManagement() {
               <td style={tdStyle}>{order.user?.name}</td>
               <td style={tdStyle}>{order.user?.email}</td>
               <td style={tdStyle}>₹{order.totalPrice}</td>
-              <td style={tdStyle}>{order.items.length}</td>
+
+              {/* 🔥 FULL PRODUCT DETAILS */}
+              <td style={tdStyle}>
+                {order.items.map((item, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "8px"
+                    }}
+                  >
+                    <img
+                      src={item.product?.image}
+                      alt={item.product?.name}
+                      width="40"
+                      height="40"
+                      style={{
+                        marginRight: "10px",
+                        borderRadius: "5px",
+                        objectFit: "cover"
+                      }}
+                    />
+                    <div>
+                      <div style={{ fontWeight: "500" }}>
+                        {item.product?.name}
+                      </div>
+                      <div style={{ fontSize: "13px", color: "#555" }}>
+                        Qty: {item.qty} | ₹{item.price}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </td>
 
               <td style={tdStyle}>
                 {order.isPaid ? (

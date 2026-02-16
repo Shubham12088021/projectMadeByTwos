@@ -103,25 +103,32 @@ const Cart = () => {
   };
   /* ===== STRIPE CHECKOUT ===== */
   const handleCheckout = async () => {
-  try {
-    const cartItems = cart.items.map((item) => ({
-      name: item.product.name,
-      price: item.product.price,
-      quantity: item.qty,
-    }));
+    try {
 
-    const response = await axios.post(
-      "http://localhost:5000/api/payment/create-checkout-session",
-      { cartItems }
-    );
+      const cartItems = cart.items.map((item) => ({
+        id: item.product._id,          // 🔥 REQUIRED
+        name: item.product.name,
+        price: item.product.price,
+        quantity: item.qty,
+        size: item.size,               // 🔥 THIS WAS MISSING
+        image: item.product.image      // optional but good
+      }));
 
-    // 🔥 NEW WAY — redirect using session.url
-    window.location.href = response.data.url;
+      console.log("Sending to Stripe:", cartItems); // 🔥 debug
 
-  } catch (error) {
-    console.error("Checkout Error:", error);
-  }
-};
+      const response = await axios.post(
+        "http://localhost:5000/api/payment/create-checkout-session",
+        { cartItems }
+      );
+
+      window.location.href = response.data.url;
+
+    } catch (error) {
+      console.error("Checkout Error:", error);
+    }
+  };
+
+
 
 
   if (loading) {

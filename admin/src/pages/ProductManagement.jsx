@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "./src/config";
 import { useNavigate } from "react-router-dom";
 
 function ProductManagement() {
@@ -13,7 +14,7 @@ function ProductManagement() {
     const fetchProducts = async () => {
         try {
             const { data } = await axios.get(
-                `${import.meta.env.VITE_API_URL}/api/products?page=${page}&limit=8`
+                `${BASE_URL}/api/products?page=${page}&limit=8`
             );
 
             setProducts(data.products);
@@ -35,7 +36,7 @@ function ProductManagement() {
 
         try {
             await axios.delete(
-                `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+                `${BASE_URL}/api/products/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

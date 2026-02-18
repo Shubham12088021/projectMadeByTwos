@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "./src/config";
 import "./ProductDetail.css";
 import { toast } from "react-toastify";
 import CartToast from "./CartToast";
@@ -22,7 +23,7 @@ function ProductDetail() {
     const fetchProduct = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/products/${id}`
+          `${BASE_URL}/api/products/${id}`
         );
         setProduct(res.data);
         setSelectedImg(res.data.image);
@@ -50,7 +51,7 @@ function ProductDetail() {
       setLoading(true);
 
       await axios.post(
-        "http://localhost:5000/api/cart/add",
+        `${BASE_URL}/api/cart/add`,
         {
           productId: product._id,
           qty,
@@ -105,18 +106,18 @@ function ProductDetail() {
   const buyNowHandler = async () => {
     try {
       const singleItem = [
-  {
-    id: product._id,
-    name: product.name,
-    price: newPrice,
-    quantity: qty,
-    size: size,      // 🔥 ADD THIS
-  },
-];
+        {
+          id: product._id,
+          name: product.name,
+          price: newPrice,
+          quantity: qty,
+          size: size,      // 🔥 ADD THIS
+        },
+      ];
 
 
       const response = await axios.post(
-        "http://localhost:5000/api/payment/create-checkout-session",
+        `${BASE_URL}/api/payment/create-checkout-session`,
         { cartItems: singleItem }
       );
 
@@ -148,9 +149,8 @@ function ProductDetail() {
                 .map((img, index) => (
                   <div
                     key={index}
-                    className={`thumbnail-box ${
-                      selectedImg === img ? "active" : ""
-                    }`}
+                    className={`thumbnail-box ${selectedImg === img ? "active" : ""
+                      }`}
                     onClick={() => setSelectedImg(img)}
                   >
                     <img src={img} alt="thumb" />

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, useRef } from "react";
 import axios from "axios";
+import {BASE_URL} from "./src/config";
 
 const CartContext = createContext();
 
@@ -51,7 +52,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       const { data } = await axios.get(
-        "http://localhost:5000/api/cart",
+        `${BASE_URL}/api/cart`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

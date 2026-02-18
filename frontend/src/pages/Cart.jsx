@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {BASE_URL} from "./src/config";
 import { useNavigate } from "react-router-dom";
 import "./Cart.css";
 import { useCart } from "../context/CartContext";
@@ -20,7 +21,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/cart", {
+        const { data } = await axios.get(`${BASE_URL}/api/cart`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -44,7 +45,7 @@ const Cart = () => {
       increaseCart(1);
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/cart/add",
+        `${BASE_URL}/api/cart/add`,
         { productId: id, qty: 1, size }, // 🔥 size added
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -66,7 +67,7 @@ const Cart = () => {
       decreaseCart(1);
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/cart/remove",
+        `${BASE_URL}/api/cart/remove`,
         { productId: id, size }, // 🔥 size added
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -88,7 +89,7 @@ const Cart = () => {
       decreaseCart(qty);
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/cart/remove",
+        `${BASE_URL}/api/cart/remove`,
         { productId: id, removeAll: true, size }, // 🔥 size added
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -117,7 +118,7 @@ const Cart = () => {
       console.log("Sending to Stripe:", cartItems); // 🔥 debug
 
       const response = await axios.post(
-        "http://localhost:5000/api/payment/create-checkout-session",
+        `${BASE_URL}/api/payment/create-checkout-session`,
         { cartItems }
       );
 

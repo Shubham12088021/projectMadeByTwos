@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "./src/config";
 
 function Dashboard() {
     const [stats, setStats] = useState(null);
@@ -9,7 +10,7 @@ function Dashboard() {
         const fetchStats = async () => {
             try {
                 const { data } = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/api/admin/stats`,
+                    `${BASE_URL}/api/admin/stats`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

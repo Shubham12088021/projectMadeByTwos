@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import {BASE_URL} from "./src/config"; // 🔥 ADD THIS
 import { useCart } from "../context/CartContext"; // 🔥 ADD THIS
 
 const Success = () => {
@@ -23,7 +24,7 @@ const Success = () => {
         }
 
         await axios.post(
-          "http://localhost:5000/api/orders/save-stripe-order",
+          `${BASE_URL}/api/orders/save-stripe-order`,
           { sessionId },
           {
             headers: {

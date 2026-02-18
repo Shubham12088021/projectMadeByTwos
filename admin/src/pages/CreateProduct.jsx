@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "./src/config";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -21,7 +22,7 @@ function CreateProduct() {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/products`,
+        `${BASE_URL}/api/products`,
         {
           name,
           price,

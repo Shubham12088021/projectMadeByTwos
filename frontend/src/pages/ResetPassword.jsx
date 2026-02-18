@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import {BASE_URL} from "./src/config";
 import { toast } from "react-toastify";
 import "./auth.css";
 
@@ -26,7 +27,7 @@ function ResetPassword() {
       setLoading(true);
 
       await axios.post(
-        `http://localhost:5000/api/users/reset-password/${token}`,
+        `${BASE_URL}/api/users/reset-password/${token}`,
         { password }
       );
 

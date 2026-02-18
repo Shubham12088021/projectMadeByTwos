@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "./src/config";
 
 function OrderManagement() {
   const [orders, setOrders] = useState([]);
@@ -10,7 +11,7 @@ function OrderManagement() {
   const fetchOrders = async () => {
     try {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/orders`,
+        `${BASE_URL}/api/orders`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

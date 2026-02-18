@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "./src/config";
 import ProductCard from "../components/ProductCard";
 import "./Products.css";
 import { toast } from "react-toastify";
@@ -11,12 +12,9 @@ const Products = ({ category }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/products`,
-          {
-            params: category ? { category } : {},
-          }
-        );
+        const res = await axios.get(`${BASE_URL}/api/products`, {
+          params: category ? { category } : {},
+        });
 
         setProducts(res.data);
       } catch (err) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "./src/config";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -24,7 +25,7 @@ function EditProduct() {
     const fetchProduct = async () => {
       try {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/products/${id}`
+          `${BASE_URL}/api/products/${id}`
         );
 
         setName(data.name);
@@ -52,7 +53,7 @@ function EditProduct() {
 
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+        `${BASE_URL}/api/products/${id}`,
         {
           name,
           price,

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import {BASE_URL} from "./src/config";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import "./auth.css";
@@ -16,7 +17,7 @@ function ForgotPassword() {
       setLoading(true);
 
       await axios.post(
-        "http://localhost:5000/api/users/forgot-password",
+        `${BASE_URL}/api/users/forgot-password`,
         { email }
       );
 

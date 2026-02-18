@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import {BASE_URL} from "./src/config";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -65,7 +66,7 @@ function VerifyEmail() {
     try {
       setLoading(true);
 
-      await axios.post("http://localhost:5000/api/users/verify-email", {
+      await axios.post(`${BASE_URL}/api/users/verify-email`, {
         email,
         otp: finalOtp,
       });
@@ -90,7 +91,7 @@ function VerifyEmail() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/users/resend-otp", {
+      await axios.post(`${BASE_URL}/api/users/resend-otp`, {
         email,
       });
 
@@ -113,7 +114,7 @@ function VerifyEmail() {
         <h2 className="title">Verify Your Email</h2>
 
         <form onSubmit={handleVerify}>
-          <div className="field">
+          <div className="field"ren>
             <label>Email</label>
             <input
               type="email"
